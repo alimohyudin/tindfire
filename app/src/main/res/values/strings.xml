@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Tinderfire</string>
+    <string name="tindfire">TinderFire</string>
+    <string name="already_liked_you">Already Liked You</string>
+    <string name="copyright">Copyright 2016,All Rights Reserved</string>
+    <string name="setting">Setting</string>
+    <string name="auto_liker">Auto Liker</string>
+    <string name="set_youtr_location">Set Your Location</string>
+    <string name="discovery_setting">Discovery Settings</string>
+    <string name="number_of_profiles">Number of profile</string>
+    <string name="terms_of_sercvice">Terms of Service</string>
+    <string name="help">Help</string>
+    <string name="logout">Logout</string>
+    <string name="profile">Profile</string>
+    <!--<string name="facebook_app_id">747490872120685</string>-->
+    <string name="facebook_app_id">464891386855067</string>
+</resources>
