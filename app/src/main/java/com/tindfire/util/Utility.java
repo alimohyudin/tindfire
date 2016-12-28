@@ -7,6 +7,12 @@ import android.util.Log;
 import android.view.Gravity;
 import android.widget.Toast;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 /**
  * Created by vcareall on 21/4/16.
  */
@@ -46,6 +52,43 @@ public class Utility {
         Toast toast = Toast.makeText(mContext, msg, Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.CENTER, 0, 0);
         toast.show();
+    }
+    public static Date convertStringDateToDateFormate(String dateString){
+        String finalString = null;
+        Date date = null;
+        try {
+            String start_dt = dateString;
+            DateFormat formatter = new SimpleDateFormat("yyyy-MM-DD");
+
+            date = (Date)formatter.parse(start_dt);
+            SimpleDateFormat newFormat = new SimpleDateFormat("MM-dd-yyyy");
+            finalString = newFormat.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return date;
+
+    }
+    public static int getAge(Date dateOfBirth)
+    {
+        Calendar now = Calendar.getInstance();
+        Calendar dob = Calendar.getInstance();
+
+        dob.setTime(dateOfBirth);
+
+        if (dob.after(now))
+        {
+            throw new IllegalArgumentException("Can't be born in the future");
+        }
+
+        int age = now.get(Calendar.YEAR) - dob.get(Calendar.YEAR);
+
+        if (now.get(Calendar.DAY_OF_YEAR) < dob.get(Calendar.DAY_OF_YEAR))
+        {
+            age--;
+        }
+
+        return age;
     }
 
 }

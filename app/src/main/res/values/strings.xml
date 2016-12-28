@@ -12,6 +12,7 @@
     <string name="help">Help</string>
     <string name="logout">Logout</string>
     <string name="profile">Profile</string>
+    <string name="alreaady_liked_me">Already Liked Me</string>
     <!--<string name="facebook_app_id">747490872120685</string>-->
     <string name="facebook_app_id">464891386855067</string>
 </resources>

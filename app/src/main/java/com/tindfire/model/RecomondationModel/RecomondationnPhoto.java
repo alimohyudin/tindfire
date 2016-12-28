@@ -3,12 +3,13 @@ package com.tindfire.model.RecomondationModel;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by vcareall on 27/12/16.
  */
-public class RecomondationnPhoto {
+public class RecomondationnPhoto implements Serializable {
     @SerializedName("id")
     @Expose
     private String id;
@@ -41,5 +42,15 @@ public class RecomondationnPhoto {
 
     public void setProcessedFiles(List<RecomondationProcessedFile> processedFiles) {
         this.processedFiles = processedFiles;
+
+    }
+
+    @Override
+    public String toString() {
+        return "RecomondationnPhoto{" +
+                "id='" + id + '\'' +
+                ", url='" + url + '\'' +
+                ", processedFiles=" + processedFiles.toString() +
+                '}';
     }
 }

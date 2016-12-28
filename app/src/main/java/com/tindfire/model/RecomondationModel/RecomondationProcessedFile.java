@@ -3,10 +3,12 @@ package com.tindfire.model.RecomondationModel;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * Created by vcareall on 27/12/16.
  */
-public class RecomondationProcessedFile {
+public class RecomondationProcessedFile implements Serializable {
     @SerializedName("url")
     @Expose
     private String url;
@@ -39,5 +41,14 @@ public class RecomondationProcessedFile {
 
     public void setWidth(Integer width) {
         this.width = width;
+    }
+
+    @Override
+    public String toString() {
+        return "RecomondationProcessedFile{" +
+                "height=" + height +
+                ", url='" + url + '\'' +
+                ", width=" + width +
+                '}';
     }
 }

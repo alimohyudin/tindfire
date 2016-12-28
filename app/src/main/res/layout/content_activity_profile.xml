@@ -6,16 +6,17 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/black"
         android:layout_weight="0.4">
-        <ImageView
+        <android.support.v4.view.ViewPager
+            android:id="@+id/ViewPager"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="fitCenter"
-            android:src="@mipmap/pic1"/>
+            android:layout_height="match_parent" />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -24,45 +25,63 @@
         android:layout_marginRight="10dp"
         android:orientation="vertical"
         android:layout_weight="0.5">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Lina,22"
-            android:textColor="@color/black"
-            android:singleLine="true"
-            android:padding="3dp"
-            android:textAppearance="?android:textAppearanceMedium"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:orientation="horizontal"
-
             android:layout_height="wrap_content">
         <TextView
+            android:id="@+id/userProfileName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1 mile away"
+            android:text=""
+            android:textColor="@color/black"
+            android:singleLine="true"
+            android:padding="2dp"
+            android:textAppearance="?android:textAppearanceMedium"/>
+            <TextView
+                android:id="@+id/userAge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="@color/black"
+                android:singleLine="true"
+                android:padding="2dp"
+                android:textAppearance="?android:textAppearanceMedium"/>
+            </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/distance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
             android:singleLine="true"
             android:textColor="@color/text_view_color"
-            android:padding="3dp"
+            android:padding="2dp"
             android:textAppearance="?android:textAppearanceSmall"/>
         <TextView
+            android:id="@+id/pingtime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Active 1 day ago"
+            android:text=""
             android:textColor="@color/text_view_color"
-            android:padding="3dp"
+            android:padding="2dp"
             android:singleLine="true"
             android:textAppearance="?android:textAppearanceSmall"/>
         </LinearLayout>
         <TextView
+            android:id="@+id/status"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="I want somebody to at look at me the way i look  at wine and to feel me."
+            android:text=""
             android:textColor="@color/text_view_color"
-            android:padding="3dp"
+            android:padding="2dp"
             android:textAppearance="?android:textAppearanceMedium"/>
     </LinearLayout>
+
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="80dp">
@@ -102,8 +121,6 @@
         </LinearLayout>
         </LinearLayout>
     </RelativeLayout>
-    
-
 
 
 </LinearLayout>

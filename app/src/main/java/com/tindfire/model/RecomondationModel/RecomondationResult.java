@@ -3,12 +3,13 @@ package com.tindfire.model.RecomondationModel;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by vcareall on 27/12/16.
  */
-public class RecomondationResult {
+public class RecomondationResult implements Serializable {
     @SerializedName("distance_mi")
     @Expose
     private Integer distanceMi;
@@ -184,5 +185,26 @@ public class RecomondationResult {
 
     public void setBirthDateInfo(String birthDateInfo) {
         this.birthDateInfo = birthDateInfo;
+    }
+
+    @Override
+    public String toString() {
+        return "RecomondationResult{" +
+                "bio='" + bio + '\'' +
+                ", distanceMi=" + distanceMi +
+                ", connectionCount=" + connectionCount +
+                ", commonLikeCount=" + commonLikeCount +
+                ", commonFriendCount=" + commonFriendCount +
+                ", commonLikes=" + commonLikes +
+                ", contentHash='" + contentHash + '\'' +
+                ", id='" + id + '\'' +
+                ", birthDate='" + birthDate + '\'' +
+                ", name='" + name + '\'' +
+                ", pingTime='" + pingTime + '\'' +
+                ", photos=" + photos.toString() +
+                ", sNumber=" + sNumber +
+                ", gender=" + gender +
+                ", birthDateInfo='" + birthDateInfo + '\'' +
+                '}';
     }
 }

@@ -26,6 +26,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private final Context context;
     private final List<RecomondationResult> recomondationResultList;
 
+
     public CategoryAdapter(ActivityMain activityMain, Context context, List<RecomondationResult>recomondationResultList) {
         this.activityMain=activityMain;
         this.context=context;
@@ -44,7 +45,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         final CategoryViewHolder viewHolder = (CategoryViewHolder) holder;
 
         try{
-            List<RecomondationnPhoto>  recomondationnPhotoList=recomondationResultList.get(position).getPhotos();
+            final List<RecomondationnPhoto> recomondationnPhotoList=recomondationResultList.get(position).getPhotos();
+
             if(recomondationnPhotoList!=null){
                 String userImage=recomondationnPhotoList.get(0).getUrl();
                 if(userImage.length()>0){
@@ -64,10 +66,17 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             if(recomondationResultList.get(position).getName().length()>0){
                 viewHolder.userName.setText(recomondationResultList.get(position).getName());
             }
+
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    activityMain.clickImage(position);
+                    Log.d("Android :","recomondationnPhotoList photo :" +recomondationnPhotoList);
+                    activityMain.clickImage(position,recomondationnPhotoList,
+                            recomondationResultList.get(position).getName(),
+                            recomondationResultList.get(position).getBio(),
+                            recomondationResultList.get(position).getPingTime(),
+                            recomondationResultList.get(position).getBirthDate(),
+                            recomondationResultList.get(position).getDistanceMi());
                 }
             });
         }catch (Exception e){
