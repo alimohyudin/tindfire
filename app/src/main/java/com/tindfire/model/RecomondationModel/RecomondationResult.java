@@ -62,6 +62,24 @@ public class RecomondationResult implements Serializable {
     @Expose
     private String birthDateInfo;
 
+    private boolean isLike;
+
+    public boolean isLike() {
+        return isLike;
+    }
+
+    public void setLike(boolean like) {
+        isLike = like;
+    }
+
+    public Integer getsNumber() {
+        return sNumber;
+    }
+
+    public void setsNumber(Integer sNumber) {
+        this.sNumber = sNumber;
+    }
+
     public Integer getDistanceMi() {
         return distanceMi;
     }
@@ -201,7 +219,6 @@ public class RecomondationResult implements Serializable {
                 ", birthDate='" + birthDate + '\'' +
                 ", name='" + name + '\'' +
                 ", pingTime='" + pingTime + '\'' +
-                ", photos=" + photos.toString() +
                 ", sNumber=" + sNumber +
                 ", gender=" + gender +
                 ", birthDateInfo='" + birthDateInfo + '\'' +

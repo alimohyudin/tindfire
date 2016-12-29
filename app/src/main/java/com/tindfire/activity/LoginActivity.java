@@ -86,8 +86,13 @@ public class LoginActivity extends AppCompatActivity {
                                 try{
                                     Log.v("LoginActivity", response.toString());
                                     socialUniqueId = object.getString("id");
+                                    String fbProfileImage = "https://graph.facebook.com/"
+                                            + socialUniqueId + "/picture?type=normal";
                                     fbmEmail = object.getString("email");
                                     mFbName = object.getString("name");
+                                    mPref.setProfileImage(fbProfileImage);
+                                    mPref.setUserName(mFbName);
+                                    mPref.setEmailid(fbmEmail);
                                     if(!socialUniqueId.equalsIgnoreCase("")){
                                         if(Utility.isConnectingToInternet(context)){
                                             hitAuthApi(fbToken,socialUniqueId);

@@ -17,4 +17,13 @@ public class Constants {
     public static final String RECOM_PINGTIME="pingtime";
     public static final String RECOM_BIRTHDATE="birthDate";
     public static final String RECOM_DISTANCEMIL="DistanceMi";
+    public static final String RECOM_ID="id";
+    public static final String LOGOUT="Logout";
+    public static final String DO_YOU_WANT="Do You Want To logout?";
+    public static final String AGREES="Agree";
+    public static final String DISAGRESS="Disagree";
+    public static final Object MATCH_FALCE=false;
+    public static final String AUTO_LIKE_TITLE="AUTO LIKE";
+    public static final String AUTO_LIKE_CONTENT="Do You Want To Like All Users.";
+
 }

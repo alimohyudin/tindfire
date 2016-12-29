@@ -7,5 +7,8 @@ public class PreferenceConstant {
     public static final String PREFERENCE_NAME="prefname";
     public static final String TOKEN="token";
     public static final String FIRSTTIME="firsttime";
+    public static final String PROFILEIMAGE="profileImage";
+    public static final String USERNAME="name";
+    public static final String EMAILID="emailId";
 
 }

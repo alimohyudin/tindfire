@@ -16,6 +16,7 @@ import com.tindfire.activity.ActivityMain;
 import com.tindfire.model.RecomondationModel.RecomondationResult;
 import com.tindfire.model.RecomondationModel.RecomondationnPhoto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -47,6 +48,10 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         try{
             final List<RecomondationnPhoto> recomondationnPhotoList=recomondationResultList.get(position).getPhotos();
 
+            if(recomondationResultList.get(position).isLike()){
+                viewHolder.userBt.setImageResource(R.mipmap.like_colors);
+            }
+
             if(recomondationnPhotoList!=null){
                 String userImage=recomondationnPhotoList.get(0).getUrl();
                 if(userImage.length()>0){
@@ -76,7 +81,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             recomondationResultList.get(position).getBio(),
                             recomondationResultList.get(position).getPingTime(),
                             recomondationResultList.get(position).getBirthDate(),
-                            recomondationResultList.get(position).getDistanceMi());
+                            recomondationResultList.get(position).getDistanceMi(),
+                            recomondationResultList.get(position).getId());
                 }
             });
         }catch (Exception e){
@@ -102,4 +108,12 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         TextView userName;
         ImageView userBt,userImage;
     }
+    public List<String> getAllId(){
+        List<String> recomondationResults=new ArrayList<>();
+        for(int i=0;i<recomondationResultList.size();i++){
+            recomondationResults.add(recomondationResultList.get(i).getId());
+        }
+        return recomondationResults;
+    }
+
 }

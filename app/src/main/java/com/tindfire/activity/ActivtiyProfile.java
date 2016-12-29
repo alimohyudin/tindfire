@@ -1,5 +1,6 @@
 package com.tindfire.activity;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -19,8 +20,12 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.tindfire.R;
+import com.tindfire.apiClient.TinderAPiClient;
+import com.tindfire.apiClient.TinderAPiInterface;
+import com.tindfire.model.LikeResponce.LikeResponceExample;
 import com.tindfire.model.RecomondationModel.RecomondationProcessedFile;
 import com.tindfire.model.RecomondationModel.RecomondationnPhoto;
+import com.tindfire.preference.PreferenceManager;
 import com.tindfire.util.Constants;
 import com.tindfire.util.Utility;
 
@@ -29,6 +34,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by vcareall on 7/12/16.
@@ -54,6 +63,11 @@ public class ActivtiyProfile extends AppCompatActivity {
     private TextView userAge;
     private int recomondationnDisatance;
     private ImageView mSideBar;
+    private String recomondationnID;
+    private ImageView likeUser;
+    private PreferenceManager mPref;
+    private ProgressDialog progressDialog;
+
 
 
     @Override
@@ -61,6 +75,7 @@ public class ActivtiyProfile extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
         context=this;
+        mPref=PreferenceManager.getInstatnce(context);
         setActionBar();
         Bundle bundle=getIntent().getExtras();
         if(bundle!=null){
@@ -70,6 +85,7 @@ public class ActivtiyProfile extends AppCompatActivity {
             recomondationnPingTime= bundle.getString(Constants.RECOM_PINGTIME);
             recomondationnBirthDate= bundle.getString(Constants.RECOM_BIRTHDATE);
             recomondationnDisatance= bundle.getInt(Constants.RECOM_DISTANCEMIL);
+            recomondationnID= bundle.getString(Constants.RECOM_ID);
         }
         init();
         addListner();
@@ -91,6 +107,54 @@ public class ActivtiyProfile extends AppCompatActivity {
             public void onPageScrollStateChanged(int state) {
             }
         });
+        likeUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(Utility.isConnectingToInternet(context)){
+                    hitLikeAPi();
+
+                }else{
+                    Utility.showMessage(context,Constants.NO_INTERNET_CONNECTION);
+                }
+
+            }
+        });
+    }
+
+    private void hitLikeAPi() {
+        progressDialog=new ProgressDialog(context);
+        progressDialog.setMessage(Constants.PLEASE_WAIT);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+        TinderAPiInterface tinderAPiInterface= TinderAPiClient.getCLient().create(TinderAPiInterface.class);
+        Call<LikeResponceExample> likeResponceExampleCall=tinderAPiInterface.getLikeResponceExampleCall(mPref.getToken(),recomondationnID);
+
+        likeResponceExampleCall.enqueue(new Callback<LikeResponceExample>() {
+            @Override
+            public void onResponse(Call<LikeResponceExample> call, Response<LikeResponceExample> response) {
+                progressDialog.dismiss();
+                try{
+                    Log.d("ANdroid :","ActivityProfile :" +response.body().toString());
+                    if(response.body().match()==Constants.MATCH_FALCE){
+                        Utility.showMessage(context,"Liked");
+                        likeUser.setImageResource(R.mipmap.profile_like_btn);
+
+                    }else{
+
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<LikeResponceExample> call, Throwable t) {
+                progressDialog.dismiss();
+            }
+        });
+
     }
 
     public void setActionBar(){
@@ -118,6 +182,7 @@ public class ActivtiyProfile extends AppCompatActivity {
         userPingtime =(TextView)findViewById(R.id.pingtime);
         userstatus =(TextView)findViewById(R.id.status);
         userAge =(TextView)findViewById(R.id.userAge);
+        likeUser =(ImageView)findViewById(R.id.likeUser);
         profilePhotoOfUser=new ArrayList<>();
         if(recomondationnPhotoList!=null){
            for(int i=0;i<recomondationnPhotoList.size();i++){

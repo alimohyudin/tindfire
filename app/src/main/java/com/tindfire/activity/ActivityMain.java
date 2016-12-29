@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -20,10 +21,16 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.facebook.login.LoginManager;
 import com.tindfire.R;
 import com.tindfire.adapter.CategoryAdapter;
 import com.tindfire.apiClient.TinderAPiClient;
 import com.tindfire.apiClient.TinderAPiInterface;
+import com.tindfire.model.LikeResponce.LikeResponceExample;
 import com.tindfire.model.RecomondationModel.RecomondationResponce;
 import com.tindfire.model.RecomondationModel.RecomondationResult;
 import com.tindfire.model.RecomondationModel.RecomondationnPhoto;
@@ -35,6 +42,9 @@ import com.tindfire.util.Utility;
 import java.io.Serializable;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -55,7 +65,6 @@ public class ActivityMain extends AppCompatActivity {
     private RelativeLayout mRejectButtonLayer;
     private ImageView mRejectBtnLayerIv;
     private ImageView mRejectBtRl1;
-    private ImageView mLikeBtRl1;
     private ProgressDialog progressDialog;
     private PreferenceManager mPref;
     private TextView mNolist;
@@ -63,6 +72,13 @@ public class ActivityMain extends AppCompatActivity {
     private DrawerLayout drawer;
     private ImageView mLogoutIv;
     private LinearLayout mLogoutLL;
+    private TextView mUserNameTv;
+    private ImageView mUserProfileIv;
+    private TextView mEmailIdTv;
+    @Bind(R.id.like_bt_rl1)ImageView mLikeBtRl1;
+    private ProgressDialog progressDialogs;
+    private List<RecomondationResult> recomondationResultList;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -70,6 +86,7 @@ public class ActivityMain extends AppCompatActivity {
         setContentView(R.layout.activity_dasboard);
         context=this;
         mPref=PreferenceManager.getInstatnce(context);
+        ButterKnife.bind(this);
         setActionBar();
         init();
         clickListner();
@@ -82,6 +99,93 @@ public class ActivityMain extends AppCompatActivity {
             mNolist.setVisibility(View.VISIBLE);
             mNolist.setText(Constants.NO_INTERNET_CONNECTION);
         }
+
+    }
+
+    @OnClick(R.id.like_bt_rl1) void autoLikeClick(){
+        AutoLikeClickApi();
+    }
+
+    private void AutoLikeClickApi() {
+        MaterialDialog.Builder builder=new MaterialDialog.Builder(this)
+                .title(Constants.AUTO_LIKE_TITLE)
+                .content(Constants.AUTO_LIKE_CONTENT)
+                .positiveText(Constants.AGREES)
+                .negativeText(Constants.DISAGRESS);
+        builder.onPositive(new MaterialDialog.SingleButtonCallback() {
+            @Override
+            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                if(Utility.isConnectingToInternet(context)){
+
+                    try{
+                        List<String> getAllIdOfUser=categoryAdapter.getAllId();
+                        dialog.dismiss();
+                        if(getAllIdOfUser!=null){
+                            progressDialogs=new ProgressDialog(context);
+                            progressDialogs.setMessage(Constants.PLEASE_WAIT);
+                            progressDialogs.setCanceledOnTouchOutside(false);
+                            progressDialogs.setCancelable(false);
+                            progressDialogs.show();
+
+                            for(int i=0;i<getAllIdOfUser.size();i++){
+                                Log.d("Android :","getAllIdOfUser size  id:" +getAllIdOfUser.get(i));
+                                if(i<getAllIdOfUser.size()){
+                                    hitLikeAPi(getAllIdOfUser.get(i),i);
+                                    dialog.dismiss();
+                                }else{
+
+                                }
+
+                            }
+                            Log.d("Android :","getAllIdOfUser size :" +getAllIdOfUser.size());
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+
+                }else{
+                    Utility.showMessage(context,Constants.NO_INTERNET_CONNECTION);
+                }
+
+            }
+        });
+        builder.onNegative(new MaterialDialog.SingleButtonCallback() {
+            @Override
+            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                dialog.dismiss();
+            }
+        });
+        MaterialDialog dialog = builder.build();
+        dialog.show();
+
+    }
+    private void hitLikeAPi(String id, final int i) {
+
+        TinderAPiInterface tinderAPiInterface= TinderAPiClient.getCLient().create(TinderAPiInterface.class);
+        Call<LikeResponceExample> likeResponceExampleCall=tinderAPiInterface.getLikeResponceExampleCall(mPref.getToken(),id);
+
+        likeResponceExampleCall.enqueue(new Callback<LikeResponceExample>() {
+            @Override
+            public void onResponse(Call<LikeResponceExample> call, Response<LikeResponceExample> response) {
+                progressDialogs.dismiss();
+                try{
+                    Log.d("ANdroid :","ActivityProfile :" +response.body().toString());
+                    if(response.body().match()==Constants.MATCH_FALCE){
+
+                        recomondationResultList.get(i).setLike(true);
+                        categoryAdapter.notifyDataSetChanged();
+                    }else{
+
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+            @Override
+            public void onFailure(Call<LikeResponceExample> call, Throwable t) {
+                progressDialogs.dismiss();
+            }
+        });
 
     }
 
@@ -107,19 +211,24 @@ public class ActivityMain extends AppCompatActivity {
                                 mRecycleView.setVisibility(View.VISIBLE);
                                 mLikeRejectBtLayer.setVisibility(View.VISIBLE);
                                 mNolist.setVisibility(View.GONE);
-                                List<RecomondationResult> recomondationResultList=response.body().getResults();
+                                recomondationResultList=response.body().getResults();
                                 mRecycleView.setHasFixedSize(true);
                                 RecyclerView.LayoutManager layoutManager=new GridLayoutManager(getApplicationContext(),3);
                                 mRecycleView.setLayoutManager(layoutManager);
                                 categoryAdapter = new CategoryAdapter(ActivityMain.this,context,recomondationResultList);
                                 mRecycleView.setAdapter(categoryAdapter);
+
                             }else{
 
                             }
                     }
                 }catch (Exception e){
                     e.printStackTrace();
-                    removeDataFromPref();
+                    LoginManager.getInstance().logOut();
+                    mPref.editor.remove(PreferenceConstant.FIRSTTIME).commit();
+                    Intent intents = new Intent(ActivityMain.this, LoginActivity.class);
+                    startActivity(intents);
+                    finish();
                 }
             }
             @Override
@@ -160,12 +269,37 @@ public class ActivityMain extends AppCompatActivity {
         mRecycleView=(RecyclerView)findViewById(R.id.recycle_view);
         mLikeRejectBtLayer=(RelativeLayout)findViewById(R.id.like_reject_bt_layerRl);
         mRejectBtRl1=(ImageView)findViewById(R.id.reject_bt_rl1);
-        mLikeBtRl1=(ImageView)findViewById(R.id.like_bt_rl1);
+
         mNolist=(TextView)findViewById(R.id.nolist);
         mRejectButtonLayer=(RelativeLayout)findViewById(R.id.reject_button_layerRl);
         mRejectBtnLayerIv=(ImageView)findViewById(R.id.reject_btn_layerIv);
         mLogoutIv=(ImageView)findViewById(R.id.logoutIv);
         mLogoutLL=(LinearLayout)findViewById(R.id.logoutLL);
+        mUserNameTv=(TextView)findViewById(R.id.user_name_tv);
+        mEmailIdTv=(TextView)findViewById(R.id.email_id_tv);
+        mUserProfileIv=(ImageView)findViewById(R.id.user_profile_iv);
+        if(!mPref.getUserName().equalsIgnoreCase("")){
+            mUserNameTv.setText(mPref.getUserName());
+        }else{
+            mUserNameTv.setVisibility(View.GONE);
+        }
+        if(!mPref.getProfileImage().equalsIgnoreCase("")){
+            Glide.with(context).load(mPref.getProfileImage())
+                    .thumbnail(0.5f)
+                    .crossFade()
+                    .placeholder(R.mipmap.app_icon)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(mUserProfileIv);
+        }else{
+            mUserProfileIv.setBackgroundResource(R.mipmap.app_icon);
+        }
+        if(!mPref.getEmailid().equalsIgnoreCase("")){
+            mEmailIdTv.setText(mPref.getEmailid());
+        }else{
+            mEmailIdTv.setVisibility(View.GONE);
+        }
+
+
 
 
     }
@@ -195,6 +329,12 @@ public class ActivityMain extends AppCompatActivity {
             public void onClick(View v) {
                 mRejectButtonLayer.setVisibility(View.GONE);
                 mLikeRejectBtLayer.setVisibility(View.VISIBLE);
+                if(Utility.isConnectingToInternet(context)){
+                    hitAgainGetRecsApi();
+                }else{
+                    Utility.showMessage(context, Constants.NO_INTERNET_CONNECTION);
+                }
+
             }
         });
         mLogoutIv.setOnClickListener(new View.OnClickListener() {
@@ -219,20 +359,91 @@ public class ActivityMain extends AppCompatActivity {
 
             }
         });
+
     }
+
+    private void hitAgainGetRecsApi() {
+        progressDialog=new ProgressDialog(context);
+        progressDialog.setMessage(Constants.PLEASE_WAIT);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        TinderAPiInterface tinderAPiInterface= TinderAPiClient.getCLient().create(TinderAPiInterface.class);
+        Log.d("Android :","mPref.getToken() :" +mPref.getToken());
+
+        Call<RecomondationResponce> recomondationResponceCall=tinderAPiInterface.getrRecomondationResponceCall(mPref.getToken());
+        recomondationResponceCall.enqueue(new Callback<RecomondationResponce>() {
+            @Override
+            public void onResponse(Call<RecomondationResponce> call, Response<RecomondationResponce> response) {
+                progressDialog.cancel();
+                try{
+                    if(response!=null){
+                        Log.d("Android :","tostringvalue :" +response.body().toString());
+                        if(Constants.STATUS_200==response.body().getStatus()){
+                            recomondationResultList.clear();
+                             recomondationResultList=response.body().getResults();
+                            Log.d("Android :","size of again recom :" +recomondationResultList.size());
+                            mRecycleView.setHasFixedSize(true);
+                            RecyclerView.LayoutManager layoutManager=new GridLayoutManager(getApplicationContext(),3);
+                            mRecycleView.setLayoutManager(layoutManager);
+                            categoryAdapter = new CategoryAdapter(ActivityMain.this,context,recomondationResultList);
+                            mRecycleView.setAdapter(categoryAdapter);
+                        }else{
+
+                        }
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                    LoginManager.getInstance().logOut();
+                    mPref.editor.remove(PreferenceConstant.FIRSTTIME).commit();
+                    Intent intents = new Intent(ActivityMain.this, LoginActivity.class);
+                    startActivity(intents);
+                    finish();
+                }
+            }
+            @Override
+            public void onFailure(Call<RecomondationResponce> call, Throwable t) {
+                progressDialog.cancel();
+            }
+        });
+
+    }
+
     public void notingClick(View view){
 
     }
     public void removeDataFromPref(){
-        mPref.editor.remove(PreferenceConstant.FIRSTTIME).commit();
-        Intent intents = new Intent(ActivityMain.this, LoginActivity.class);
-        startActivity(intents);
-        finish();
+        MaterialDialog.Builder builder=new MaterialDialog.Builder(this)
+                .title(Constants.LOGOUT)
+                .content(Constants.DO_YOU_WANT)
+                .positiveText(Constants.AGREES)
+                .negativeText(Constants.DISAGRESS);
+        builder.onPositive(new MaterialDialog.SingleButtonCallback() {
+            @Override
+            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                LoginManager.getInstance().logOut();
+                mPref.editor.remove(PreferenceConstant.FIRSTTIME).commit();
+                Intent intents = new Intent(ActivityMain.this, LoginActivity.class);
+                startActivity(intents);
+                finish();
+                dialog.dismiss();
+
+            }
+        });
+        builder.onNegative(new MaterialDialog.SingleButtonCallback() {
+            @Override
+            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                dialog.dismiss();
+            }
+        });
+        MaterialDialog dialog = builder.build();
+        dialog.show();
     }
 
     public void clickImage(int position,
                            List<RecomondationnPhoto> recomondationnPhotoList,
-                           String name, String bio,String pingtime, String birthDate,int DistanceMi) {
+                           String name, String bio,String pingtime, String birthDate,int DistanceMi,String Id) {
         try{
             Intent intent=new Intent(ActivityMain.this,ActivtiyProfile.class);
             intent.putExtra(Constants.RECOM_PHO_LIST, (Serializable) recomondationnPhotoList);
@@ -241,6 +452,7 @@ public class ActivityMain extends AppCompatActivity {
             intent.putExtra(Constants.RECOM_PINGTIME, pingtime);
             intent.putExtra(Constants.RECOM_BIRTHDATE, birthDate);
             intent.putExtra(Constants.RECOM_DISTANCEMIL, DistanceMi);
+            intent.putExtra(Constants.RECOM_ID, Id);
             startActivity(intent);
         }catch (Exception e){
             e.printStackTrace();
