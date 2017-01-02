@@ -30,7 +30,7 @@
             android:id="@+id/userBt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/like"
+            android:src="@mipmap/like_btn"
             android:layout_marginRight="10dp"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"

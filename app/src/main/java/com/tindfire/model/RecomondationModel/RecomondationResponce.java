@@ -12,13 +12,13 @@ import java.util.List;
 public class RecomondationResponce implements Serializable {
     @SerializedName("status")
     @Expose
-    private Integer status;
+    private int status;
 
     @SerializedName("results")
     @Expose
-    private List<RecomondationResult> results = null;
+    private List<RecomondationResult> results;
 
-    public Integer getStatus() {
+    public int getStatus() {
         return status;
     }
 

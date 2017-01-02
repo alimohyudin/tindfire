@@ -47,44 +47,53 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         try{
             final List<RecomondationnPhoto> recomondationnPhotoList=recomondationResultList.get(position).getPhotos();
-
-            if(recomondationResultList.get(position).isLike()){
-                viewHolder.userBt.setImageResource(R.mipmap.like_colors);
-            }
-
-            if(recomondationnPhotoList!=null){
-                String userImage=recomondationnPhotoList.get(0).getUrl();
-                if(userImage.length()>0){
-                    Glide.with(context).load(userImage)
-                            .thumbnail(0.5f)
-                            .crossFade()
-                            .placeholder(R.mipmap.app_icon)
-                            .diskCacheStrategy(DiskCacheStrategy.ALL)
-                            .into(viewHolder.userImage);
-                    Log.d("Android :","userImage :" +userImage);
-                }else {
-                    viewHolder.userImage.setBackgroundResource(R.mipmap.app_icon);
-                    Log.d("Android :","userImage1 :" +userImage);
+            if(recomondationResultList!=null){
+                if(recomondationResultList.get(position).isLike()){
+                    viewHolder.userBt.setImageResource(R.mipmap.like_colors);
+                }else{
+                    viewHolder.userBt.setImageResource(R.mipmap.like);
                 }
-            }
-
-            if(recomondationResultList.get(position).getName().length()>0){
-                viewHolder.userName.setText(recomondationResultList.get(position).getName());
-            }
-
-            viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.d("Android :","recomondationnPhotoList photo :" +recomondationnPhotoList);
-                    activityMain.clickImage(position,recomondationnPhotoList,
-                            recomondationResultList.get(position).getName(),
-                            recomondationResultList.get(position).getBio(),
-                            recomondationResultList.get(position).getPingTime(),
-                            recomondationResultList.get(position).getBirthDate(),
-                            recomondationResultList.get(position).getDistanceMi(),
-                            recomondationResultList.get(position).getId());
+                if(recomondationnPhotoList!=null){
+                    String userImage=recomondationnPhotoList.get(0).getUrl();
+                    if(userImage.length()>0){
+                        Glide.with(context).load(userImage)
+                                .thumbnail(0.5f)
+                                .crossFade()
+                                .placeholder(R.mipmap.app_icon)
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .into(viewHolder.userImage);
+                        Log.d("Android :","userImage :" +userImage);
+                    }else {
+                        viewHolder.userImage.setImageResource(R.mipmap.app_icon);
+                        Log.d("Android :","userImage1 :" +userImage);
+                    }
+                }else{
+                    viewHolder.userImage.setImageResource(R.mipmap.pic1);
                 }
-            });
+
+
+                if(recomondationResultList.get(position).getName()!=null){
+                    viewHolder.userName.setText(recomondationResultList.get(position).getName());
+                }else{
+                    viewHolder.userName.setText("Tinder");
+                }
+
+                viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Log.d("Android :","recomondationnPhotoList photo :" +recomondationnPhotoList);
+                        activityMain.clickImage(position,recomondationnPhotoList,
+                                recomondationResultList.get(position).getName(),
+                                recomondationResultList.get(position).getBio(),
+                                recomondationResultList.get(position).getPingTime(),
+                                recomondationResultList.get(position).getBirthDate(),
+                                recomondationResultList.get(position).getDistanceMi(),
+                                recomondationResultList.get(position).getId(),
+                                recomondationResultList.get(position).isLike());
+                    }
+                });
+            }
+
         }catch (Exception e){
             e.printStackTrace();
         }

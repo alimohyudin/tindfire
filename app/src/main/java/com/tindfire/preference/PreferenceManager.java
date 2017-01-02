@@ -96,6 +96,19 @@ public class PreferenceManager {
         return sharedPreferences.getString(PreferenceConstant.EMAILID,"");
     }
 
+    /**
+     *
+     * @param socialId
+     */
+
+    public void setSocialId(String socialId){
+        editor.putString(PreferenceConstant.SOCIALID,socialId);
+        editor.commit();
+    }
+    public String getSocialId(){
+        return sharedPreferences.getString(PreferenceConstant.SOCIALID,"");
+    }
+
 
 
 }

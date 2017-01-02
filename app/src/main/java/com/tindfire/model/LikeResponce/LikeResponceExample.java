@@ -16,7 +16,7 @@ public class LikeResponceExample {
     public String toString() {
         return "LikeResponceExample{" +
                 "likesRemaining=" + likesRemaining +
-                ", match=" + match.getClass().toString() +
+                ", match=" + match.getClass().getSimpleName() +
                 '}';
     }
 }

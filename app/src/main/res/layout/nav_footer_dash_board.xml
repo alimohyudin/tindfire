@@ -38,7 +38,7 @@
                 android:src="@mipmap/next_arrow"/>
         </LinearLayout>
         <LinearLayout
-            android:id="@+id/match"
+            android:id="@+id/matchll"
             android:layout_width="match_parent"
             android:orientation="horizontal"
             android:layout_marginLeft="5dp"
@@ -64,7 +64,7 @@
         <LinearLayout
             android:id="@+id/logoutLL"
             android:layout_width="match_parent"
-            android:layout_below="@+id/match"
+            android:layout_below="@+id/matchll"
             android:orientation="horizontal"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"

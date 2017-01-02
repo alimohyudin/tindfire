@@ -23,6 +23,8 @@ import com.tindfire.R;
 import com.tindfire.apiClient.TinderAPiClient;
 import com.tindfire.apiClient.TinderAPiInterface;
 import com.tindfire.model.LikeResponce.LikeResponceExample;
+import com.tindfire.model.LikeResponce.Match;
+import com.tindfire.model.PassModel.PassData;
 import com.tindfire.model.RecomondationModel.RecomondationProcessedFile;
 import com.tindfire.model.RecomondationModel.RecomondationnPhoto;
 import com.tindfire.preference.PreferenceManager;
@@ -67,7 +69,9 @@ public class ActivtiyProfile extends AppCompatActivity {
     private ImageView likeUser;
     private PreferenceManager mPref;
     private ProgressDialog progressDialog;
-
+    private ImageView rejectuserIv;
+    private int recomondationnPosition;
+    private boolean recomondationnLike;
 
 
     @Override
@@ -86,7 +90,10 @@ public class ActivtiyProfile extends AppCompatActivity {
             recomondationnBirthDate= bundle.getString(Constants.RECOM_BIRTHDATE);
             recomondationnDisatance= bundle.getInt(Constants.RECOM_DISTANCEMIL);
             recomondationnID= bundle.getString(Constants.RECOM_ID);
+            recomondationnPosition= bundle.getInt(Constants.RECOM_POSITION);
+            recomondationnLike= bundle.getBoolean(Constants.RECOM_LIKE);
         }
+
         init();
         addListner();
 
@@ -119,6 +126,42 @@ public class ActivtiyProfile extends AppCompatActivity {
 
             }
         });
+        rejectuserIv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hitPassAPi();
+            }
+        });
+    }
+    private void hitPassAPi() {
+        progressDialog=new ProgressDialog(context);
+        progressDialog.setMessage(Constants.PLEASE_WAIT);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+        TinderAPiInterface tinderAPiInterface= TinderAPiClient.getCLient().create(TinderAPiInterface.class);
+        Call<PassData> likePassData=tinderAPiInterface.getLiPassDataCall(mPref.getToken(),recomondationnID);
+
+        likePassData.enqueue(new Callback<PassData>() {
+            @Override
+            public void onResponse(Call<PassData> call, Response<PassData> response) {
+                progressDialog.dismiss();
+                try{
+                    Log.d("ANdroid :","ActivityProfile :" +response.body().toString());
+                    if(response.body().getStatus()==200){
+                        likeUser.setImageResource(R.mipmap.profile_like_btns);
+                    }else{
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+            @Override
+            public void onFailure(Call<PassData> call, Throwable t) {
+                progressDialog.dismiss();
+            }
+        });
+
     }
 
     private void hitLikeAPi() {
@@ -135,13 +178,17 @@ public class ActivtiyProfile extends AppCompatActivity {
             public void onResponse(Call<LikeResponceExample> call, Response<LikeResponceExample> response) {
                 progressDialog.dismiss();
                 try{
-                    Log.d("ANdroid :","ActivityProfile :" +response.body().toString());
-                    if(response.body().match()==Constants.MATCH_FALCE){
+                    Object obj=response.body().match();
+                    Log.d("ANdroid :","obj :" +obj.toString());
+                    if(obj instanceof Match){
+                        Match match=(Match)response.body().match();
+                        Log.d("Android :","match valuse :" +match.toString());
+                        Utility.showMessage(context,"Match");
+                    }else if(obj instanceof Boolean){
+                        Boolean b=(Boolean)response.body().match();
+                        Log.d("Android :","boolean valuse :" +b);
                         Utility.showMessage(context,"Liked");
                         likeUser.setImageResource(R.mipmap.profile_like_btn);
-
-                    }else{
-
                     }
                 }catch (Exception e){
                     e.printStackTrace();
@@ -183,6 +230,7 @@ public class ActivtiyProfile extends AppCompatActivity {
         userstatus =(TextView)findViewById(R.id.status);
         userAge =(TextView)findViewById(R.id.userAge);
         likeUser =(ImageView)findViewById(R.id.likeUser);
+        rejectuserIv =(ImageView)findViewById(R.id.rejectuserIv);
         profilePhotoOfUser=new ArrayList<>();
         if(recomondationnPhotoList!=null){
            for(int i=0;i<recomondationnPhotoList.size();i++){
@@ -214,6 +262,10 @@ public class ActivtiyProfile extends AppCompatActivity {
         }else{
             userDistance.setText("");
         }
+        if(recomondationnLike){
+            likeUser.setImageResource(R.mipmap.profile_like_btn);
+        }
+
     }
 
     private void splitePingTime(String recomondationnPingTime) {

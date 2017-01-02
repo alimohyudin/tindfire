@@ -10,5 +10,6 @@ public class PreferenceConstant {
     public static final String PROFILEIMAGE="profileImage";
     public static final String USERNAME="name";
     public static final String EMAILID="emailId";
+    public static final String SOCIALID="socialId";
 
 }

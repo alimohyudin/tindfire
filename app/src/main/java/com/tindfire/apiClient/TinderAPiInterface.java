@@ -2,7 +2,10 @@ package com.tindfire.apiClient;
 
 import com.tindfire.model.AuthModel.AuthRequest;
 import com.tindfire.model.AuthModel.AuthResponceExample;
+import com.tindfire.model.GetMatchModel.AuthMatch;
+import com.tindfire.model.GetMatchModel.GetMatchExample;
 import com.tindfire.model.LikeResponce.LikeResponceExample;
+import com.tindfire.model.PassModel.PassData;
 import com.tindfire.model.RecomondationModel.RecomondationResponce;
 
 import retrofit2.Call;
@@ -29,6 +32,13 @@ public interface TinderAPiInterface {
     Call<LikeResponceExample> getLikeResponceExampleCall(@Header("X-Auth-Token") String token, @Path("targetId") String targetId);
 
 
+
+    @GET("/pass/{targetId}")
+    Call<PassData> getLiPassDataCall(@Header("X-Auth-Token") String token, @Path("targetId") String targetId);
+
+
+    @POST("/updates")
+    Call<GetMatchExample> getMatchExampleCall(@Header("X-Auth-Token") String token, @Body AuthMatch authMatch);
 
 
 

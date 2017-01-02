@@ -1,4 +1,4 @@
-package com.tindfire.model.LikeResponce;
+package com.tindfire.model.GetMatchModel;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -6,10 +6,10 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 /**
- * Created by vcareall on 29/12/16.
+ * Created by vcareall on 30/12/16.
  */
 
-public class Match {
+public class GetMatchMatch {
     @SerializedName("_id")
     @Expose
     private String id;
@@ -52,12 +52,9 @@ public class Match {
     @SerializedName("is_boost_match")
     @Expose
     private Boolean isBoostMatch;
-    @SerializedName("following")
+    @SerializedName("person")
     @Expose
-    private Boolean following;
-    @SerializedName("following_moments")
-    @Expose
-    private Boolean followingMoments;
+    private GetMatchPerson person;
 
     public String getId() {
         return id;
@@ -155,6 +152,8 @@ public class Match {
         this.pending = pending;
     }
 
+
+
     public Boolean getIsSuperLike() {
         return isSuperLike;
     }
@@ -171,25 +170,17 @@ public class Match {
         this.isBoostMatch = isBoostMatch;
     }
 
-    public Boolean getFollowing() {
-        return following;
+    public GetMatchPerson getPerson() {
+        return person;
     }
 
-    public void setFollowing(Boolean following) {
-        this.following = following;
-    }
-
-    public Boolean getFollowingMoments() {
-        return followingMoments;
-    }
-
-    public void setFollowingMoments(Boolean followingMoments) {
-        this.followingMoments = followingMoments;
+    public void setPerson(GetMatchPerson person) {
+        this.person = person;
     }
 
     @Override
     public String toString() {
-        return "Match{" +
+        return "GetMatchMatch{" +
                 "closed=" + closed +
                 ", id='" + id + '\'' +
                 ", commonFriendCount=" + commonFriendCount +
@@ -204,8 +195,7 @@ public class Match {
                 ", pending=" + pending +
                 ", isSuperLike=" + isSuperLike +
                 ", isBoostMatch=" + isBoostMatch +
-                ", following=" + following +
-                ", followingMoments=" + followingMoments +
+                ", person=" + person +
                 '}';
     }
 }
