@@ -26,7 +26,9 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private final ActivityMain activityMain;
     private final Context context;
     private final List<RecomondationResult> recomondationResultList;
-
+    private  List<RecomondationResult> recomondationResultRejectList;
+    private ArrayList<String> rejectid=new ArrayList<String>();
+    Boolean rejectvalue =true;
 
     public CategoryAdapter(ActivityMain activityMain, Context context, List<RecomondationResult>recomondationResultList) {
         this.activityMain=activityMain;
@@ -92,6 +94,23 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                 recomondationResultList.get(position).isLike());
                     }
                 });
+//                viewHolder.userBt.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        if(rejectvalue){
+//                            viewHolder.userBt.setImageResource(R.mipmap.reject);
+//                            rejectid.add(recomondationResultList.get(position).getId());
+//                            Log.d("Android :","rejectid add :" +rejectid.size());
+//                            rejectvalue=false;
+//                        }else{
+//                            viewHolder.userBt.setImageResource(R.mipmap.like_colors);
+//                            rejectid.remove(recomondationResultList.get(position).getId());
+//                            Log.d("Android :","rejectid remove :" +rejectid.size());
+//                            rejectvalue=true;
+//                        }
+//
+//                    }
+//                });
             }
 
         }catch (Exception e){
@@ -120,8 +139,23 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public List<String> getAllId(){
         List<String> recomondationResults=new ArrayList<>();
         for(int i=0;i<recomondationResultList.size();i++){
-            recomondationResults.add(recomondationResultList.get(i).getId());
-        }
+                recomondationResults.add(recomondationResultList.get(i).getId());
+            }
+//        if(rejectid!=null){
+//            for(int i=0;i<recomondationResultList.size();i++){
+//                for(int j=0;j<rejectid.size();j++){
+//                    if(!rejectid.get(j).equalsIgnoreCase(recomondationResultList.get(i).getId())){
+//                        recomondationResults.add(recomondationResultList.get(i).getId());
+//                    }
+//                }
+//            }
+//        }else{
+//            for(int i=0;i<recomondationResultList.size();i++){
+//                recomondationResults.add(recomondationResultList.get(i).getId());
+//            }
+//        }
+        Log.d("Android :","list of recom :" +recomondationResults.size());
+
         return recomondationResults;
     }
 

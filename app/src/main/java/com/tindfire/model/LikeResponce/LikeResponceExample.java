@@ -7,6 +7,15 @@ package com.tindfire.model.LikeResponce;
 public class LikeResponceExample {
     Object match;
     int likesRemaining;
+     boolean isLike;
+
+    public boolean isLike() {
+        return isLike;
+    }
+
+    public void setLike(boolean like) {
+        isLike = like;
+    }
 
     public Object match() {
         return match;

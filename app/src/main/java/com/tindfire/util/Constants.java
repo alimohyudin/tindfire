@@ -21,6 +21,7 @@ public class Constants {
     public static final String RECOM_ID="id";
     public static final String RECOM_POSITION="position";
     public static final String RECOM_LIKE="like";
+    public static final String RECOM_RESULT="recomandation_result";
     public static final String LOGOUT="Logout";
     public static final String DO_YOU_WANT="Do You Want To logout?";
     public static final String AGREES="Agree";
@@ -28,11 +29,10 @@ public class Constants {
     public static final Object MATCH_FALCE=false;
     public static final String AUTO_LIKE_TITLE="AUTO LIKE";
     public static final String AUTO_LIKE_CONTENT="Do You Want To Like All Users.";
-    public static final String REFERSH_LIST_TITLE="REFRESH/PASS";
-    public static final String REFERSH_LIST_CONTENT="Do You Want To Refersh Or Pass list";
-
-    public static final String REFERSH="Refersh";
-    public static final String PASS="Passs";
+    public static final String PASS_LIST_TITLE="PASS";
+    public static final String PASS_LIST_CONTENT="Do You Want To Pass List";
+    public static final String ALREADY_LIKE="You have already like the Alluser";
+    public static final String ALREADY_DISLIKE="You have already Dislike the Alluser";
 
 
 }

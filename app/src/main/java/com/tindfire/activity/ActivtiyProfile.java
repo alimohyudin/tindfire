@@ -26,6 +26,7 @@ import com.tindfire.model.LikeResponce.LikeResponceExample;
 import com.tindfire.model.LikeResponce.Match;
 import com.tindfire.model.PassModel.PassData;
 import com.tindfire.model.RecomondationModel.RecomondationProcessedFile;
+import com.tindfire.model.RecomondationModel.RecomondationResult;
 import com.tindfire.model.RecomondationModel.RecomondationnPhoto;
 import com.tindfire.preference.PreferenceManager;
 import com.tindfire.util.Constants;
@@ -72,6 +73,7 @@ public class ActivtiyProfile extends AppCompatActivity {
     private ImageView rejectuserIv;
     private int recomondationnPosition;
     private boolean recomondationnLike;
+    private List<RecomondationResult> recomondationnResultList;
 
 
     @Override
@@ -84,6 +86,7 @@ public class ActivtiyProfile extends AppCompatActivity {
         Bundle bundle=getIntent().getExtras();
         if(bundle!=null){
             recomondationnPhotoList= (List<RecomondationnPhoto>)bundle.getSerializable(Constants.RECOM_PHO_LIST);
+            recomondationnResultList= (List<RecomondationResult>)bundle.getSerializable(Constants.RECOM_RESULT);
             recomondationnName= bundle.getString(Constants.RECOM_Name);
             recomondationnBio= bundle.getString(Constants.RECOM_BIO);
             recomondationnPingTime= bundle.getString(Constants.RECOM_PINGTIME);
@@ -92,6 +95,7 @@ public class ActivtiyProfile extends AppCompatActivity {
             recomondationnID= bundle.getString(Constants.RECOM_ID);
             recomondationnPosition= bundle.getInt(Constants.RECOM_POSITION);
             recomondationnLike= bundle.getBoolean(Constants.RECOM_LIKE);
+            Log.d("Android:"," onrecomondationnLike:" +recomondationnLike);
         }
 
         init();
@@ -118,8 +122,11 @@ public class ActivtiyProfile extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(Utility.isConnectingToInternet(context)){
-                    hitLikeAPi();
-
+                    if(!recomondationnLike){
+                        hitLikeAPi();
+                    }else{
+                        Utility.showMessage(context,Constants.ALREADY_LIKE);
+                    }
                 }else{
                     Utility.showMessage(context,Constants.NO_INTERNET_CONNECTION);
                 }
@@ -189,6 +196,10 @@ public class ActivtiyProfile extends AppCompatActivity {
                         Log.d("Android :","boolean valuse :" +b);
                         Utility.showMessage(context,"Liked");
                         likeUser.setImageResource(R.mipmap.profile_like_btn);
+                        recomondationnResultList.get(recomondationnPosition).setLike(true);
+                        Log.d("Android :","boolean valuse111 :" +recomondationnResultList.get(recomondationnPosition).isLike());
+
+
                     }
                 }catch (Exception e){
                     e.printStackTrace();
@@ -265,6 +276,9 @@ public class ActivtiyProfile extends AppCompatActivity {
         if(recomondationnLike){
             likeUser.setImageResource(R.mipmap.profile_like_btn);
         }
+//        if(recomondationnResultList.get(recomondationnPosition).isLike()){
+//            likeUser.setImageResource(R.mipmap.profile_like_btn);
+//        }
 
     }
 
@@ -386,4 +400,9 @@ public class ActivtiyProfile extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
 }

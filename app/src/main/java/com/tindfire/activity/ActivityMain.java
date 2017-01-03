@@ -25,6 +25,7 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.dinuscxj.refresh.RecyclerRefreshLayout;
 import com.facebook.login.LoginManager;
 import com.tindfire.R;
 import com.tindfire.adapter.CategoryAdapter;
@@ -80,7 +81,9 @@ public class ActivityMain extends AppCompatActivity {
     private ProgressDialog progressDialogs;
     private List<RecomondationResult> recomondationResultList;
     private LinearLayout mMatchll;
-
+    private RecyclerRefreshLayout mRefreshLayout;
+    private final RefreshEventDetector mRefreshEventDetector = new RefreshEventDetector();
+    Boolean autoLike;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -101,8 +104,48 @@ public class ActivityMain extends AppCompatActivity {
             mNolist.setVisibility(View.VISIBLE);
             mNolist.setText(Constants.NO_INTERNET_CONNECTION);
         }
+        mRefreshLayout.setOnRefreshListener(mRefreshEventDetector);
 
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d("","pause" +"pause");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d("","onResume" +"onResume");
+    }
+
+    public class RefreshEventDetector implements RecyclerRefreshLayout.OnRefreshListener {
+
+        @Override
+        public void onRefresh() {
+            if(Utility.isConnectingToInternet(context)){
+                try{
+                    if(Utility.isConnectingToInternet(context)){
+                        mRefreshLayout.setRefreshing(true);
+                        mRefreshLayout.setAnimateToRefreshDuration(2);
+                        hitAgainGetRecsApi();
+                    }else{
+                        Utility.showMessage(context, Constants.NO_INTERNET_CONNECTION);
+                        mRefreshLayout.setRefreshing(false);
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
+            }else{
+                Utility.showMessage(context,Constants.NO_INTERNET_CONNECTION);
+                mRefreshLayout.setRefreshing(false);
+            }
+
+        }
+    }
+
 
     public void setActionBar(){
         headerLayout= LayoutInflater.from(context).inflate(R.layout.action_bar,null);
@@ -128,6 +171,7 @@ public class ActivityMain extends AppCompatActivity {
         settingImage.setBackground(getResources().getDrawable(R.mipmap.settings));
         settingImage.setVisibility(View.INVISIBLE);
         mRecycleView=(RecyclerView)findViewById(R.id.recycle_view);
+        mRefreshLayout=(RecyclerRefreshLayout)findViewById(R.id.refresh_layout);
         mLikeRejectBtLayer=(RelativeLayout)findViewById(R.id.like_reject_bt_layerRl);
         mRejectBtRl1=(ImageView)findViewById(R.id.reject_bt_rl1);
 
@@ -163,7 +207,12 @@ public class ActivityMain extends AppCompatActivity {
     }
 
     @OnClick(R.id.like_bt_rl1) void autoLikeClick(){
-        AutoLikeClickApi();
+        if(!recomondationResultList.get(0).isLike()){
+            AutoLikeClickApi();
+        }else{
+            Utility.showMessage(context,Constants.ALREADY_LIKE);
+        }
+
     }
 
     private void AutoLikeClickApi() {
@@ -190,6 +239,7 @@ public class ActivityMain extends AppCompatActivity {
                             for(int i=0;i<getAllIdOfUser.size();i++){
                                 Log.d("Android :","getAllIdOfUser size  id:" +getAllIdOfUser.get(i));
                                     recomondationResultList.get(i).setLike(true);
+                                autoLike=true;
                                     hitLikeAPi(getAllIdOfUser.get(i),i);
                                     dialog.dismiss();
                             }
@@ -227,8 +277,6 @@ public class ActivityMain extends AppCompatActivity {
                 try{
                     Log.d("ANdroid :","ActivityProfile :" +response.body().toString());
                     if(response.body().match()==Constants.MATCH_FALCE){
-
-
                         categoryAdapter.notifyDataSetChanged();
                     }else{
 
@@ -337,7 +385,12 @@ public class ActivityMain extends AppCompatActivity {
             public void onClick(View v) {
 //                mRejectButtonLayer.setVisibility(View.VISIBLE);
 //                mLikeRejectBtLayer.setVisibility(View.GONE);
-                showPassAndRefereshDailog();
+                if(recomondationResultList.get(0).isLike()){
+                    showPassAndRefereshDailog();
+                }else{
+                    Utility.showMessage(context,Constants.ALREADY_DISLIKE);
+                }
+
             }
         });
         mRejectBtnLayerIv.setOnClickListener(new View.OnClickListener() {
@@ -386,32 +439,11 @@ public class ActivityMain extends AppCompatActivity {
 
     private void showPassAndRefereshDailog() {
         MaterialDialog.Builder builder=new MaterialDialog.Builder(this)
-                .title(Constants.REFERSH_LIST_TITLE)
-                .content(Constants.REFERSH_LIST_CONTENT)
-                .positiveText(Constants.REFERSH)
-                .negativeText(Constants.PASS);
+                .title(Constants.PASS_LIST_TITLE)
+                .content(Constants.PASS_LIST_CONTENT)
+                .positiveText(Constants.AGREES)
+                .negativeText(Constants.DISAGRESS);
         builder.onPositive(new MaterialDialog.SingleButtonCallback() {
-            @Override
-            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                if(Utility.isConnectingToInternet(context)){
-                    try{
-                        if(Utility.isConnectingToInternet(context)){
-                          hitAgainGetRecsApi();
-                            dialog.dismiss();
-                         }else{
-                           Utility.showMessage(context, Constants.NO_INTERNET_CONNECTION);
-                           }
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
-
-                }else{
-                    Utility.showMessage(context,Constants.NO_INTERNET_CONNECTION);
-                }
-
-            }
-        });
-        builder.onNegative(new MaterialDialog.SingleButtonCallback() {
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                 if(Utility.isConnectingToInternet(context)){
@@ -441,6 +473,13 @@ public class ActivityMain extends AppCompatActivity {
                 }else{
                     Utility.showMessage(context,Constants.NO_INTERNET_CONNECTION);
                 }
+
+            }
+        });
+        builder.onNegative(new MaterialDialog.SingleButtonCallback() {
+            @Override
+            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                dialog.dismiss();
             }
         });
         MaterialDialog dialog = builder.build();
@@ -476,12 +515,6 @@ public class ActivityMain extends AppCompatActivity {
     }
 
     private void hitAgainGetRecsApi() {
-        progressDialog=new ProgressDialog(context);
-        progressDialog.setMessage(Constants.PLEASE_WAIT);
-        progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.setCancelable(false);
-        progressDialog.show();
-
         TinderAPiInterface tinderAPiInterface= TinderAPiClient.getCLient().create(TinderAPiInterface.class);
         Log.d("Android :","mPref.getToken() :" +mPref.getToken());
 
@@ -489,11 +522,12 @@ public class ActivityMain extends AppCompatActivity {
         recomondationResponceCall.enqueue(new Callback<RecomondationResponce>() {
             @Override
             public void onResponse(Call<RecomondationResponce> call, Response<RecomondationResponce> response) {
-                progressDialog.cancel();
+
                 try{
                     if(response!=null){
                         Log.d("Android :","tostringvalue :" +response.body().toString());
                         if(Constants.STATUS_200==response.body().getStatus()){
+                            mRefreshLayout.setRefreshing(false);
                             recomondationResultList.clear();
                              recomondationResultList=response.body().getResults();
                             Log.d("Android :","size of again recom :" +recomondationResultList.size());
@@ -517,7 +551,7 @@ public class ActivityMain extends AppCompatActivity {
             }
             @Override
             public void onFailure(Call<RecomondationResponce> call, Throwable t) {
-                progressDialog.cancel();
+                mRefreshLayout.setRefreshing(false);
             }
         });
 
@@ -568,6 +602,7 @@ public class ActivityMain extends AppCompatActivity {
             intent.putExtra(Constants.RECOM_ID, Id);
             intent.putExtra(Constants.RECOM_POSITION, position);
             intent.putExtra(Constants.RECOM_LIKE, like);
+            intent.putExtra(Constants.RECOM_RESULT,(Serializable)  recomondationResultList);
             startActivity(intent);
         }catch (Exception e){
             e.printStackTrace();
