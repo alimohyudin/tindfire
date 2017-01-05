@@ -10,6 +10,8 @@ import java.util.List;
  * Created by vcareall on 27/12/16.
  */
 public class RecomondationResult implements Serializable {
+
+    private boolean isSelected = false;
     @SerializedName("distance_mi")
     @Expose
     private Integer distanceMi;
@@ -223,5 +225,14 @@ public class RecomondationResult implements Serializable {
                 ", gender=" + gender +
                 ", birthDateInfo='" + birthDateInfo + '\'' +
                 '}';
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
+    }
+
+
+    public boolean isSelected() {
+        return isSelected;
     }
 }

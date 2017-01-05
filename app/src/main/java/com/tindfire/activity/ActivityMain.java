@@ -4,9 +4,11 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -84,6 +86,7 @@ public class ActivityMain extends AppCompatActivity {
     private RecyclerRefreshLayout mRefreshLayout;
     private final RefreshEventDetector mRefreshEventDetector = new RefreshEventDetector();
     Boolean autoLike;
+    private ContentLoadingProgressBar progress_bar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -118,6 +121,25 @@ public class ActivityMain extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         Log.d("","onResume" +"onResume");
+    }
+
+    public void selectedLike(String id, int position) {
+        if(Utility.isConnectingToInternet(context)){
+            hitLikeAPi(id,position);
+        }else{
+            Utility.showMessage(context,Constants.NO_INTERNET_CONNECTION);
+        }
+
+    }
+
+    public void selectedDislike(String id, int position) {
+        if(Utility.isConnectingToInternet(context)){
+            hitPassAPi(id,position);
+        }else{
+            Utility.showMessage(context,Constants.NO_INTERNET_CONNECTION);
+        }
+
+
     }
 
     public class RefreshEventDetector implements RecyclerRefreshLayout.OnRefreshListener {
@@ -174,6 +196,7 @@ public class ActivityMain extends AppCompatActivity {
         mRefreshLayout=(RecyclerRefreshLayout)findViewById(R.id.refresh_layout);
         mLikeRejectBtLayer=(RelativeLayout)findViewById(R.id.like_reject_bt_layerRl);
         mRejectBtRl1=(ImageView)findViewById(R.id.reject_bt_rl1);
+        progress_bar=(ContentLoadingProgressBar)findViewById(R.id.progress_bar);
 
         mNolist=(TextView)findViewById(R.id.nolist);
         mRejectButtonLayer=(RelativeLayout)findViewById(R.id.reject_button_layerRl);
@@ -207,14 +230,13 @@ public class ActivityMain extends AppCompatActivity {
     }
 
     @OnClick(R.id.like_bt_rl1) void autoLikeClick(){
-        if(!recomondationResultList.get(0).isLike()){
-            AutoLikeClickApi();
-        }else{
-            Utility.showMessage(context,Constants.ALREADY_LIKE);
-        }
-
+        AutoLikeClickApi();
+//        if(!recomondationResultList.get(0).isLike()){
+//            AutoLikeClickApi();
+//        }else{
+//            Utility.showMessage(context,Constants.ALREADY_LIKE);
+//        }
     }
-
     private void AutoLikeClickApi() {
         MaterialDialog.Builder builder=new MaterialDialog.Builder(this)
                 .title(Constants.AUTO_LIKE_TITLE)
@@ -223,26 +245,30 @@ public class ActivityMain extends AppCompatActivity {
                 .negativeText(Constants.DISAGRESS);
         builder.onPositive(new MaterialDialog.SingleButtonCallback() {
             @Override
-            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+            public void onClick(@NonNull final MaterialDialog dialog, @NonNull DialogAction which) {
                 if(Utility.isConnectingToInternet(context)){
 
                     try{
-                        List<String> getAllIdOfUser=categoryAdapter.getAllId();
+                        final List<String> getAllIdOfUser=categoryAdapter.getAllId();
                         dialog.dismiss();
                         if(getAllIdOfUser!=null){
-                            progressDialogs=new ProgressDialog(context);
-                            progressDialogs.setMessage(Constants.PLEASE_WAIT);
-                            progressDialogs.setCanceledOnTouchOutside(false);
-                            progressDialogs.setCancelable(false);
-                            progressDialogs.show();
 
                             for(int i=0;i<getAllIdOfUser.size();i++){
                                 Log.d("Android :","getAllIdOfUser size  id:" +getAllIdOfUser.get(i));
-                                    recomondationResultList.get(i).setLike(true);
-                                autoLike=true;
-                                    hitLikeAPi(getAllIdOfUser.get(i),i);
-                                    dialog.dismiss();
+                                Handler handler = new Handler();
+                                final int finalI = i;
+                                Runnable runnable=new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        autoLike=true;
+                                        hitLikeAPi(getAllIdOfUser.get(finalI), finalI);
+                                        dialog.dismiss();
+                                    }
+                                };
+                                handler.postDelayed(runnable, 1000);
+
                             }
+
                             Log.d("Android :","getAllIdOfUser size :" +getAllIdOfUser.size());
                         }
                     }catch (Exception e){
@@ -266,6 +292,7 @@ public class ActivityMain extends AppCompatActivity {
 
     }
     private void hitLikeAPi(String id, final int i) {
+        progress_bar.setVisibility(View.VISIBLE);
 
         TinderAPiInterface tinderAPiInterface= TinderAPiClient.getCLient().create(TinderAPiInterface.class);
         Call<LikeResponceExample> likeResponceExampleCall=tinderAPiInterface.getLikeResponceExampleCall(mPref.getToken(),id);
@@ -273,13 +300,16 @@ public class ActivityMain extends AppCompatActivity {
         likeResponceExampleCall.enqueue(new Callback<LikeResponceExample>() {
             @Override
             public void onResponse(Call<LikeResponceExample> call, Response<LikeResponceExample> response) {
-                progressDialogs.dismiss();
+                progress_bar.setVisibility(View.INVISIBLE);
                 try{
                     Log.d("ANdroid :","ActivityProfile :" +response.body().toString());
-                    if(response.body().match()==Constants.MATCH_FALCE){
-                        categoryAdapter.notifyDataSetChanged();
-                    }else{
 
+                    if(response.body().match()==Constants.MATCH_FALCE){
+                        recomondationResultList.get(i).setLike(true);
+                        categoryAdapter.notifyDataSetChanged();
+
+
+                    }else{
                     }
                 }catch (Exception e){
                     e.printStackTrace();
@@ -287,7 +317,7 @@ public class ActivityMain extends AppCompatActivity {
             }
             @Override
             public void onFailure(Call<LikeResponceExample> call, Throwable t) {
-                progressDialogs.dismiss();
+                progress_bar.setVisibility(View.INVISIBLE);
             }
         });
 
@@ -385,11 +415,12 @@ public class ActivityMain extends AppCompatActivity {
             public void onClick(View v) {
 //                mRejectButtonLayer.setVisibility(View.VISIBLE);
 //                mLikeRejectBtLayer.setVisibility(View.GONE);
-                if(recomondationResultList.get(0).isLike()){
-                    showPassAndRefereshDailog();
-                }else{
-                    Utility.showMessage(context,Constants.ALREADY_DISLIKE);
-                }
+                showPassAndRefereshDailog();
+//                if(recomondationResultList.get(0).isLike()){
+//                    showPassAndRefereshDailog();
+//                }else{
+//                    Utility.showMessage(context,Constants.ALREADY_DISLIKE);
+//                }
 
             }
         });
@@ -452,15 +483,9 @@ public class ActivityMain extends AppCompatActivity {
                         List<String> getAllIdOfUser=categoryAdapter.getAllId();
                         dialog.dismiss();
                         if(getAllIdOfUser!=null){
-                            progressDialogs=new ProgressDialog(context);
-                            progressDialogs.setMessage(Constants.PLEASE_WAIT);
-                            progressDialogs.setCanceledOnTouchOutside(false);
-                            progressDialogs.setCancelable(false);
-                            progressDialogs.show();
-
                             for(int i=0;i<getAllIdOfUser.size();i++){
                                 Log.d("Android :","getAllIdOfUser size  id:" +getAllIdOfUser.get(i));
-                                recomondationResultList.get(i).setLike(false);
+
                                 hitPassAPi(getAllIdOfUser.get(i),i);
                                 dialog.dismiss();
                             }
@@ -487,7 +512,8 @@ public class ActivityMain extends AppCompatActivity {
 
     }
 
-    private void hitPassAPi(String id, int i) {
+    private void hitPassAPi(String id, final int i) {
+        progress_bar.setVisibility(View.VISIBLE);
 
         TinderAPiInterface tinderAPiInterface= TinderAPiClient.getCLient().create(TinderAPiInterface.class);
         Call<PassData> likePassData=tinderAPiInterface.getLiPassDataCall(mPref.getToken(),id);
@@ -495,10 +521,11 @@ public class ActivityMain extends AppCompatActivity {
         likePassData.enqueue(new Callback<PassData>() {
             @Override
             public void onResponse(Call<PassData> call, Response<PassData> response) {
-                progressDialogs.dismiss();
+                progress_bar.setVisibility(View.INVISIBLE);
                 try{
                     Log.d("ANdroid :","ActivityProfile :" +response.body().toString());
                     if(response.body().getStatus()==200){
+                        recomondationResultList.get(i).setLike(false);
                         categoryAdapter.notifyDataSetChanged();
                     }else{
                     }
@@ -508,7 +535,7 @@ public class ActivityMain extends AppCompatActivity {
             }
             @Override
             public void onFailure(Call<PassData> call, Throwable t) {
-                progressDialogs.dismiss();
+                progress_bar.setVisibility(View.INVISIBLE);
             }
         });
 
