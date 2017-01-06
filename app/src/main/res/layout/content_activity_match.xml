@@ -1,24 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/match_RLView"
         android:layout_marginTop="3dp"
         android:layout_width="match_parent"
+        android:layout_above="@+id/addRelative"
         android:layout_height="match_parent"/>
+
     <TextView
         android:id="@+id/nolist"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text="NoList"
         android:visibility="gone"
+        android:layout_above="@+id/addRelative"
         android:gravity="center"
         android:textAppearance="?android:textAppearanceMedium"
         android:textColor="@color/colorAccent"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/addRelative"/>
 
-</LinearLayout>
+</RelativeLayout>

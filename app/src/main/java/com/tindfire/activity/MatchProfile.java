@@ -1,6 +1,5 @@
 package com.tindfire.activity;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -21,15 +20,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.tindfire.R;
-import com.tindfire.apiClient.TinderAPiClient;
-import com.tindfire.apiClient.TinderAPiInterface;
-import com.tindfire.model.LikeResponce.LikeResponceExample;
-import com.tindfire.model.LikeResponce.Match;
-import com.tindfire.model.PassModel.PassData;
-import com.tindfire.model.RecomondationModel.RecomondationProcessedFile;
-import com.tindfire.model.RecomondationModel.RecomondationResult;
-import com.tindfire.model.RecomondationModel.RecomondationnPhoto;
-import com.tindfire.preference.PreferenceManager;
+import com.tindfire.model.GetMatchModel.GetMatchPhoto;
 import com.tindfire.util.Constants;
 import com.tindfire.util.Utility;
 
@@ -39,21 +30,16 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 /**
  * Created by vcareall on 7/12/16.
  */
-public class ActivtiyProfile extends AppCompatActivity {
+public class MatchProfile extends AppCompatActivity {
     private Context context;
     private View headerLayout;
     private Toolbar toolbar;
     private TextView titleView;
     private ViewPager viewPager;
-    private List<RecomondationnPhoto> recomondationnPhotoList;
-    private List<RecomondationProcessedFile> recomondationnFileList;
+    private List<GetMatchPhoto> recomondationnPhotoList;
     private String recomondationnName;
     private String recomondationnBio;
     private TextView userProfileName;
@@ -61,48 +47,31 @@ public class ActivtiyProfile extends AppCompatActivity {
     private String recomondationnBirthDate;
     ArrayList<String> profilePhotoOfUser;
     private CustomPagerAdapter mCustomPagerAdapter;
-    private TextView userDistance;
     private TextView userPingtime;
     private TextView userstatus;
     private TextView userAge;
-    private int recomondationnDisatance;
     private ImageView mSideBar;
-    private String recomondationnID;
-    private ImageView likeUser;
-    private PreferenceManager mPref;
-    private ProgressDialog progressDialog;
-    private ImageView rejectuserIv;
     private int recomondationnPosition;
-    private boolean recomondationnLike;
-    private List<RecomondationResult> recomondationnResultList;
     private RelativeLayout addRelativeLayout;
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile);
+        setContentView(R.layout.match_profile);
         context=this;
-        mPref=PreferenceManager.getInstatnce(context);
         setActionBar();
         Bundle bundle=getIntent().getExtras();
         if(bundle!=null){
-            recomondationnPhotoList= (List<RecomondationnPhoto>)bundle.getSerializable(Constants.RECOM_PHO_LIST);
-            recomondationnResultList= (List<RecomondationResult>)bundle.getSerializable(Constants.RECOM_RESULT);
+            recomondationnPhotoList= (List<GetMatchPhoto>)bundle.getSerializable(Constants.RECOM_PHO_LIST);
             recomondationnName= bundle.getString(Constants.RECOM_Name);
             recomondationnBio= bundle.getString(Constants.RECOM_BIO);
             recomondationnPingTime= bundle.getString(Constants.RECOM_PINGTIME);
             recomondationnBirthDate= bundle.getString(Constants.RECOM_BIRTHDATE);
-            recomondationnDisatance= bundle.getInt(Constants.RECOM_DISTANCEMIL);
-            recomondationnID= bundle.getString(Constants.RECOM_ID);
             recomondationnPosition= bundle.getInt(Constants.RECOM_POSITION);
-            recomondationnLike= bundle.getBoolean(Constants.RECOM_LIKE);
-            Log.d("Android:"," onrecomondationnLike:" +recomondationnLike);
         }
-
         init();
         addListner();
-
     }
 
     private void addListner() {
@@ -120,103 +89,9 @@ public class ActivtiyProfile extends AppCompatActivity {
             public void onPageScrollStateChanged(int state) {
             }
         });
-        likeUser.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(Utility.isConnectingToInternet(context)){
-                    if(!recomondationnLike){
-                        hitLikeAPi();
-                    }else{
-                        Utility.showMessage(context,Constants.ALREADY_LIKE);
-                    }
-                }else{
-                    Utility.showMessage(context,Constants.NO_INTERNET_CONNECTION);
-                }
 
-            }
-        });
-        rejectuserIv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                hitPassAPi();
-            }
-        });
-    }
-    private void hitPassAPi() {
-        progressDialog=new ProgressDialog(context);
-        progressDialog.setMessage(Constants.PLEASE_WAIT);
-        progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.setCancelable(false);
-        progressDialog.show();
-        TinderAPiInterface tinderAPiInterface= TinderAPiClient.getCLient().create(TinderAPiInterface.class);
-        Call<PassData> likePassData=tinderAPiInterface.getLiPassDataCall(mPref.getToken(),recomondationnID);
-
-        likePassData.enqueue(new Callback<PassData>() {
-            @Override
-            public void onResponse(Call<PassData> call, Response<PassData> response) {
-                progressDialog.dismiss();
-                try{
-                    Log.d("ANdroid :","ActivityProfile :" +response.body().toString());
-                    if(response.body().getStatus()==200){
-                        likeUser.setImageResource(R.mipmap.profile_like_btns);
-                    }else{
-                    }
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-            }
-            @Override
-            public void onFailure(Call<PassData> call, Throwable t) {
-                progressDialog.dismiss();
-            }
-        });
 
     }
-
-    private void hitLikeAPi() {
-        progressDialog=new ProgressDialog(context);
-        progressDialog.setMessage(Constants.PLEASE_WAIT);
-        progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.setCancelable(false);
-        progressDialog.show();
-        TinderAPiInterface tinderAPiInterface= TinderAPiClient.getCLient().create(TinderAPiInterface.class);
-        Call<LikeResponceExample> likeResponceExampleCall=tinderAPiInterface.getLikeResponceExampleCall(mPref.getToken(),recomondationnID);
-
-        likeResponceExampleCall.enqueue(new Callback<LikeResponceExample>() {
-            @Override
-            public void onResponse(Call<LikeResponceExample> call, Response<LikeResponceExample> response) {
-                progressDialog.dismiss();
-                try{
-                    Object obj=response.body().match();
-                    Log.d("ANdroid :","obj :" +obj.toString());
-                    if(obj instanceof Match){
-                        Match match=(Match)response.body().match();
-                        Log.d("Android :","match valuse :" +match.toString());
-                        Utility.showMessage(context,"Match");
-                    }else if(obj instanceof Boolean){
-                        Boolean b=(Boolean)response.body().match();
-                        Log.d("Android :","boolean valuse :" +b);
-                        Utility.showMessage(context,"Liked");
-                        likeUser.setImageResource(R.mipmap.profile_like_btn);
-                        recomondationnResultList.get(recomondationnPosition).setLike(true);
-                        Log.d("Android :","boolean valuse111 :" +recomondationnResultList.get(recomondationnPosition).isLike());
-
-
-                    }
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<LikeResponceExample> call, Throwable t) {
-                progressDialog.dismiss();
-            }
-        });
-
-    }
-
     public void setActionBar(){
         headerLayout= LayoutInflater.from(context).inflate(R.layout.action_bar,null);
         toolbar=(Toolbar)findViewById(R.id.toolBar);
@@ -235,17 +110,14 @@ public class ActivtiyProfile extends AppCompatActivity {
         mSideBar=(ImageView)toolbar.findViewById(R.id.side_bar);
         mSideBar.setVisibility(View.INVISIBLE);
         titleView=(TextView)toolbar.findViewById(R.id.titleView);
-        titleView.setText(getResources().getText(R.string.profile));
+        titleView.setText(getResources().getText(R.string.match));
+        addRelativeLayout=(RelativeLayout)findViewById(R.id.addRelative);
+        addRelativeLayout.addView(MyAdmovAds.loadAdmodAd(context));
         viewPager =(ViewPager)findViewById(R.id.ViewPager);
         userProfileName =(TextView)findViewById(R.id.userProfileName);
-        userDistance =(TextView)findViewById(R.id.distance);
         userPingtime =(TextView)findViewById(R.id.pingtime);
         userstatus =(TextView)findViewById(R.id.status);
         userAge =(TextView)findViewById(R.id.userAge);
-        likeUser =(ImageView)findViewById(R.id.likeUser);
-        rejectuserIv =(ImageView)findViewById(R.id.rejectuserIv);
-        addRelativeLayout=(RelativeLayout)findViewById(R.id.addRelative);
-        addRelativeLayout.addView(MyAdmovAds.loadAdmodAd(context));
         profilePhotoOfUser=new ArrayList<>();
         if(recomondationnPhotoList!=null){
            for(int i=0;i<recomondationnPhotoList.size();i++){
@@ -254,7 +126,6 @@ public class ActivtiyProfile extends AppCompatActivity {
            }
             Log.d("ANdroid :","profilePhotoOfUser.size "+profilePhotoOfUser.size());
             Log.d("ANdroid :","recomondationnName.size "+recomondationnName);
-
         }
         if(profilePhotoOfUser!=null){
             mCustomPagerAdapter = new CustomPagerAdapter(context);
@@ -272,17 +143,6 @@ public class ActivtiyProfile extends AppCompatActivity {
         if(recomondationnBirthDate.trim().length()>0){
             spliteDateAndTime(recomondationnBirthDate);
         }
-        if(recomondationnDisatance!=0){
-            userDistance.setText(recomondationnDisatance +" " +"miles away");
-        }else{
-            userDistance.setText("");
-        }
-        if(recomondationnLike){
-            likeUser.setImageResource(R.mipmap.profile_like_btn);
-        }
-//        if(recomondationnResultList.get(recomondationnPosition).isLike()){
-//            likeUser.setImageResource(R.mipmap.profile_like_btn);
-//        }
 
     }
 

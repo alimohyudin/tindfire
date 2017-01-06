@@ -28,7 +28,7 @@ public class Constants {
     public static final String DISAGRESS="Disagree";
     public static final Object MATCH_FALCE=false;
     public static final String AUTO_LIKE_TITLE="AUTO LIKE";
-    public static final String AUTO_LIKE_CONTENT="Do You Want To Like All Users.";
+    public static final String AUTO_LIKE_CONTENT="Like Selected Profiles";
     public static final String PASS_LIST_TITLE="PASS";
     public static final String PASS_LIST_CONTENT="Do You Want To Pass List";
     public static final String ALREADY_LIKE="You have already like the Alluser";

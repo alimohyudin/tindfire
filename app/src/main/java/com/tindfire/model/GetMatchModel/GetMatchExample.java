@@ -3,13 +3,14 @@ package com.tindfire.model.GetMatchModel;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by vcareall on 30/12/16.
  */
 
-public class GetMatchExample {
+public class GetMatchExample implements Serializable{
 
     @SerializedName("matches")
     @Expose

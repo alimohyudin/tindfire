@@ -87,6 +87,7 @@ public class ActivityMain extends AppCompatActivity {
     private final RefreshEventDetector mRefreshEventDetector = new RefreshEventDetector();
     Boolean autoLike;
     private ContentLoadingProgressBar progress_bar;
+    private RelativeLayout addRelativeLayout;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -109,6 +110,12 @@ public class ActivityMain extends AppCompatActivity {
         }
         mRefreshLayout.setOnRefreshListener(mRefreshEventDetector);
 
+        try{
+            MyAdmovAds.loadintertitisalAdmodAd(context);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
     @Override
@@ -126,6 +133,7 @@ public class ActivityMain extends AppCompatActivity {
     public void selectedLike(String id, int position) {
         if(Utility.isConnectingToInternet(context)){
             hitLikeAPi(id,position);
+            recomondationResultList.get(position).setLike(true);
         }else{
             Utility.showMessage(context,Constants.NO_INTERNET_CONNECTION);
         }
@@ -135,6 +143,7 @@ public class ActivityMain extends AppCompatActivity {
     public void selectedDislike(String id, int position) {
         if(Utility.isConnectingToInternet(context)){
             hitPassAPi(id,position);
+            recomondationResultList.get(position).setLike(false);
         }else{
             Utility.showMessage(context,Constants.NO_INTERNET_CONNECTION);
         }
@@ -197,7 +206,8 @@ public class ActivityMain extends AppCompatActivity {
         mLikeRejectBtLayer=(RelativeLayout)findViewById(R.id.like_reject_bt_layerRl);
         mRejectBtRl1=(ImageView)findViewById(R.id.reject_bt_rl1);
         progress_bar=(ContentLoadingProgressBar)findViewById(R.id.progress_bar);
-
+        addRelativeLayout=(RelativeLayout)findViewById(R.id.addRelative);
+        addRelativeLayout.addView(MyAdmovAds.loadAdmodAd(context));
         mNolist=(TextView)findViewById(R.id.nolist);
         mRejectButtonLayer=(RelativeLayout)findViewById(R.id.reject_button_layerRl);
         mRejectBtnLayerIv=(ImageView)findViewById(R.id.reject_btn_layerIv);
@@ -230,12 +240,16 @@ public class ActivityMain extends AppCompatActivity {
     }
 
     @OnClick(R.id.like_bt_rl1) void autoLikeClick(){
-        AutoLikeClickApi();
-//        if(!recomondationResultList.get(0).isLike()){
-//            AutoLikeClickApi();
-//        }else{
-//            Utility.showMessage(context,Constants.ALREADY_LIKE);
-//        }
+        try{
+            if(!recomondationResultList.get(3).isLike()&&!recomondationResultList.get(2).isLike()) {
+                AutoLikeClickApi();
+            }else{
+
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
     private void AutoLikeClickApi() {
         MaterialDialog.Builder builder=new MaterialDialog.Builder(this)
@@ -255,6 +269,7 @@ public class ActivityMain extends AppCompatActivity {
 
                             for(int i=0;i<getAllIdOfUser.size();i++){
                                 Log.d("Android :","getAllIdOfUser size  id:" +getAllIdOfUser.get(i));
+                                recomondationResultList.get(i).setLike(true);
                                 Handler handler = new Handler();
                                 final int finalI = i;
                                 Runnable runnable=new Runnable() {
@@ -305,7 +320,7 @@ public class ActivityMain extends AppCompatActivity {
                     Log.d("ANdroid :","ActivityProfile :" +response.body().toString());
 
                     if(response.body().match()==Constants.MATCH_FALCE){
-                        recomondationResultList.get(i).setLike(true);
+
                         categoryAdapter.notifyDataSetChanged();
 
 
@@ -413,14 +428,16 @@ public class ActivityMain extends AppCompatActivity {
         mRejectBtRl1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                mRejectButtonLayer.setVisibility(View.VISIBLE);
-//                mLikeRejectBtLayer.setVisibility(View.GONE);
-                showPassAndRefereshDailog();
-//                if(recomondationResultList.get(0).isLike()){
-//                    showPassAndRefereshDailog();
-//                }else{
-//                    Utility.showMessage(context,Constants.ALREADY_DISLIKE);
-//                }
+                try{
+                    if(recomondationResultList.get(3).isLike()&&recomondationResultList.get(2).isLike()){
+                        showPassAndRefereshDailog();
+                    }else{
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
+
 
             }
         });
@@ -485,7 +502,7 @@ public class ActivityMain extends AppCompatActivity {
                         if(getAllIdOfUser!=null){
                             for(int i=0;i<getAllIdOfUser.size();i++){
                                 Log.d("Android :","getAllIdOfUser size  id:" +getAllIdOfUser.get(i));
-
+                                recomondationResultList.get(i).setLike(false);
                                 hitPassAPi(getAllIdOfUser.get(i),i);
                                 dialog.dismiss();
                             }
@@ -525,7 +542,6 @@ public class ActivityMain extends AppCompatActivity {
                 try{
                     Log.d("ANdroid :","ActivityProfile :" +response.body().toString());
                     if(response.body().getStatus()==200){
-                        recomondationResultList.get(i).setLike(false);
                         categoryAdapter.notifyDataSetChanged();
                     }else{
                     }

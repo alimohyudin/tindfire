@@ -20,8 +20,6 @@
         android:onClick="notingClick"
         android:orientation="vertical">
         <include layout="@layout/nav_header_dash_board" />
-
-
         <include layout="@layout/nav_footer_dash_board" />
 
 

@@ -25,26 +25,44 @@
         android:gravity="center"
         android:textAppearance="?android:textAppearanceMedium"
         android:textColor="@color/colorAccent"/>
+
+    <android.support.v4.widget.ContentLoadingProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        style="@style/Widget.AppCompat.ProgressBar" />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:background="@mipmap/bg1"
         android:layout_alignParentStart="true"
-        android:id="@+id/like_reject_bt_layerRl">
+        android:id="@+id/addRelative"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@mipmap/bg1"
+        android:id="@+id/like_reject_bt_layerRl"
+        android:layout_above="@+id/addRelative"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" >
         <LinearLayout
             android:layout_width="match_parent"
             android:orientation="horizontal"
             android:layout_height="match_parent">
-        <ImageView
-            android:id="@+id/reject_bt_rl1"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="0.5"
-            android:src="@mipmap/reject_btn"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true" />
+            <ImageView
+                android:id="@+id/reject_bt_rl1"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
+                android:src="@mipmap/reject_btn"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true" />
             <ImageView
                 android:id="@+id/like_bt_rl1"
                 android:layout_width="wrap_content"
@@ -72,14 +90,7 @@
             android:src="@mipmap/reject_btn"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true" />
-        </RelativeLayout>
-    <android.support.v4.widget.ContentLoadingProgressBar
-        android:id="@+id/progress_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_centerInParent="true"
-        android:visibility="gone"
-        style="@style/Widget.AppCompat.ProgressBar"
-        />
+    </RelativeLayout>
+
+
 </RelativeLayout>

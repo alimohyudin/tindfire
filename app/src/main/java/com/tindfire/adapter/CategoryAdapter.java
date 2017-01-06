@@ -73,8 +73,6 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 }else{
                     viewHolder.userImage.setImageResource(R.mipmap.pic1);
                 }
-
-
                 if(recomondationResultList.get(position).getName()!=null){
                     viewHolder.userName.setText(recomondationResultList.get(position).getName());
                 }else{

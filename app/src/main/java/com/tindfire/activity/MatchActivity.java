@@ -2,6 +2,7 @@ package com.tindfire.activity;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
@@ -13,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.tindfire.R;
@@ -22,10 +24,12 @@ import com.tindfire.apiClient.TinderAPiInterface;
 import com.tindfire.model.GetMatchModel.AuthMatch;
 import com.tindfire.model.GetMatchModel.GetMatchExample;
 import com.tindfire.model.GetMatchModel.GetMatchMatch;
+import com.tindfire.model.GetMatchModel.GetMatchPhoto;
 import com.tindfire.preference.PreferenceManager;
 import com.tindfire.util.Constants;
 import com.tindfire.util.Utility;
 
+import java.io.Serializable;
 import java.util.List;
 
 import retrofit2.Call;
@@ -47,6 +51,7 @@ public class MatchActivity extends AppCompatActivity {
     private TextView mNolist;
     private ProgressDialog progressDialog;
     private MatchAdapter matchAdapter;
+    private RelativeLayout addRelativeLayout;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -64,6 +69,11 @@ public class MatchActivity extends AppCompatActivity {
             matchRLView.setVisibility(View.GONE);
             mNolist.setVisibility(View.VISIBLE);
             mNolist.setText(Constants.NO_INTERNET_CONNECTION);
+        }
+        try{
+            MyAdmovAds.loadintertitisalAdmodAd(context);
+        }catch (Exception e){
+            e.printStackTrace();
         }
 
 
@@ -145,5 +155,27 @@ public class MatchActivity extends AppCompatActivity {
         titleView.setText(getResources().getText(R.string.match));
         matchRLView=(RecyclerView)findViewById(R.id.match_RLView);
         mNolist=(TextView)findViewById(R.id.nolist);
+        addRelativeLayout=(RelativeLayout)findViewById(R.id.addRelative);
+        addRelativeLayout.addView(MyAdmovAds.loadAdmodAd(context));
+    }
+
+    public void setMatch(int position,
+                         List<GetMatchPhoto> getMatchPhotoList,
+                         String name, String bio,
+                         String pingTime, String birthDate) {
+        try{
+            Intent intent=new Intent(MatchActivity.this,MatchProfile.class);
+            intent.putExtra(Constants.RECOM_PHO_LIST, (Serializable) getMatchPhotoList);
+            intent.putExtra(Constants.RECOM_Name, name);
+            intent.putExtra(Constants.RECOM_BIO, bio);
+            intent.putExtra(Constants.RECOM_PINGTIME, pingTime);
+            intent.putExtra(Constants.RECOM_BIRTHDATE, birthDate);
+            intent.putExtra(Constants.RECOM_POSITION, position);
+            startActivity(intent);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+
     }
 }

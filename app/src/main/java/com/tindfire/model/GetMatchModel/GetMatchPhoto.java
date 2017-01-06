@@ -3,11 +3,13 @@ package com.tindfire.model.GetMatchModel;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * Created by vcareall on 30/12/16.
  */
 
-public class GetMatchPhoto {
+public class GetMatchPhoto implements Serializable {
     @SerializedName("url")
     @Expose
     private String url;

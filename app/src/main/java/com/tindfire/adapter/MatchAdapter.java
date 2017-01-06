@@ -46,8 +46,8 @@ public class MatchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         final MatchViewHolder viewHolder = (MatchViewHolder) holder;
 
         try{
-            GetMatchPerson getMatchPerson=getMatchMatchList.get(position).getPerson();
-            List<GetMatchPhoto> getMatchPhotoList=getMatchPerson.getPhotos();
+            final GetMatchPerson getMatchPerson=getMatchMatchList.get(position).getPerson();
+           final List<GetMatchPhoto> getMatchPhotoList=getMatchPerson.getPhotos();
             if(getMatchPhotoList!=null){
                 String userImage=getMatchPhotoList.get(0).getUrl();
                 if(userImage.length()>0){
@@ -66,6 +66,13 @@ public class MatchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             if(getMatchPerson.getName().length()>0){
                 viewHolder.userName.setText(getMatchPerson.getName());
             }
+            viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    activityMatch.setMatch(position,getMatchPhotoList,getMatchPerson.getName(),
+                            getMatchPerson.getBio(),getMatchPerson.getPingTime(),getMatchPerson.getBirthDate());
+                }
+            });
         }catch (Exception e){
             e.printStackTrace();
         }
