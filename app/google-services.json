@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "665260705982",
+    "firebase_url": "https://tinderfire-b6087.firebaseio.com",
+    "project_id": "tinderfire-b6087",
+    "storage_bucket": "tinderfire-b6087.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:665260705982:android:3882c8908e4ae7b4",
+        "android_client_info": {
+          "package_name": "com.tindfire"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "665260705982-ouugo0gejlebo4biltpondbt1b7oev4o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyByyUfD8b9okH6eVh9jseApa2WztknlHIs"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

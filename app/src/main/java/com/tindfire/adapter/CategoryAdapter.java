@@ -20,6 +20,8 @@ import com.tindfire.model.RecomondationModel.RecomondationnPhoto;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.tindfire.R.mipmap.like;
+
 /**
  * Created by vcareall on 7/12/16.
  */
@@ -54,7 +56,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 if(recomondationResultList.get(position).isLike()){
                     viewHolder.userBt.setImageResource(R.mipmap.like_colors);
                 }else{
-                    viewHolder.userBt.setImageResource(R.mipmap.like);
+                    viewHolder.userBt.setImageResource(like);
                 }
                 if(recomondationnPhotoList!=null){
                     String userImage=recomondationnPhotoList.get(0).getUrl();
@@ -106,6 +108,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             activityMain.selectedDislike(model.getId(),position);
                             recomondationRejected.remove(model.getId());
                             Log.d("ANdroid :","recomondationRejected_remove ::" +recomondationRejected.size());
+
                         }
                     }
                 });
@@ -143,24 +146,6 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
         Log.d("Android :","list of recom all :" +recomondationResults.size());
         return recomondationResults;
-//        List<String> recomondationResults=new ArrayList<>();
-//        if(recomondationRejected.size()>0){
-//            for(int i=0;i<recomondationResultList.size();i++){
-//                for(int j=0;j<recomondationRejected.size();j++){
-//                    if(!recomondationResultList.get(i).getId().equalsIgnoreCase(recomondationRejected.get(j))){
-//                        recomondationResults.add(recomondationResultList.get(i).getId());
-//                    }
-//                }
-//            }
-//            Log.d("Android :","list of recom :" +recomondationResults.size());
-//            return recomondationResults;
-//        }else{
-//            for(int i=0;i<recomondationResultList.size();i++){
-//                recomondationResults.add(recomondationResultList.get(i).getId());
-//            }
-//            Log.d("Android :","list of recom all :" +recomondationResults.size());
-//            return recomondationResults;
-//        }
 
     }
     public List<String>getRejectedId(){
@@ -173,6 +158,16 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             }
             return recomondationRejected;
         }
+    }
+    public void likeProfile(int position) {
+        recomondationResultList.get(position).setLike(true);
+        Log.d("Android :","likeprofile :" +recomondationResultList.get(position).isLike());
+        notifyDataSetChanged();
+    }
+    public void passProfile(int position) {
+        recomondationResultList.get(position).setLike(false);
+        Log.d("Android :","passProfile :" +recomondationResultList.get(position).isLike());
+        notifyDataSetChanged();
     }
 
 

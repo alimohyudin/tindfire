@@ -12,9 +12,9 @@ import com.google.android.gms.ads.InterstitialAd;
  * Created by vcareall on 5/7/16.
  */
 public class MyAdmovAds {
-    final static String AD_UNIT_ID = "ca-app-pub-5148921223084059/1272533321";
+    final static String AD_UNIT_ID = "ca-app-pub-6977458640858756/6156426626";//"ca-app-pub-5148921223084059/1272533321";
     private static AdView adView;
-    final static String AD_UNIT_ID_INTERTITISAL = "ca-app-pub-5148921223084059/2749266527";
+    final static String AD_UNIT_ID_INTERTITISAL = "ca-app-pub-6977458640858756/5801879428";//"ca-app-pub-5148921223084059/2749266527";
     private static InterstitialAd interstitial;
 //	private static InterstitialAd mInterstitialAd;
 

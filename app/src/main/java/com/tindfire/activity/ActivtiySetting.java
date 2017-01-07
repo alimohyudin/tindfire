@@ -8,9 +8,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.tindfire.R;
+import com.tindfire.preference.PreferenceManager;
+import com.tindfire.util.Constants;
 
 /**
  * Created by vcareall on 7/12/16.
@@ -20,16 +24,24 @@ public class ActivtiySetting extends AppCompatActivity {
     private View headerLayout;
     private Toolbar toolbar;
     private TextView titleView;
+    private ImageView mSideBar;
+    private RadioButton distanceInKm;
+    private RadioButton distanceInMiles;
 
+    private PreferenceManager mPref;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
         context=this;
+        mPref=PreferenceManager.getInstatnce(context);
         setActionBar();
         init();
+        clickListner();
 
     }
+
+
     public void setActionBar(){
         headerLayout= LayoutInflater.from(context).inflate(R.layout.action_bar,null);
         toolbar=(Toolbar)findViewById(R.id.toolBar);
@@ -45,8 +57,39 @@ public class ActivtiySetting extends AppCompatActivity {
         }
     }
     private void init() {
+        mSideBar=(ImageView)toolbar.findViewById(R.id.side_bar);
+        mSideBar.setVisibility(View.INVISIBLE);
         titleView=(TextView)toolbar.findViewById(R.id.titleView);
         titleView.setText(getResources().getText(R.string.setting));
+        distanceInKm=(RadioButton)findViewById(R.id.distanceInKm);
+        distanceInMiles=(RadioButton)findViewById(R.id.distanceInMiles);
+        if(mPref.getButtonRadio().equalsIgnoreCase(Constants.DISTANCE_MILES)){
+            distanceInKm.setChecked(false);
+            distanceInMiles.setChecked(true);
+        }else {
+            distanceInKm.setChecked(true);
+            distanceInMiles.setChecked(false);
+        }
+    }
+    private void clickListner() {
+        distanceInKm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                distanceInKm.setChecked(true);
+                distanceInMiles.setChecked(false);
+                mPref.setButtonRadio(Constants.DISTANCE_KM);
+
+            }
+        });
+        distanceInMiles.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                distanceInMiles.setChecked(true);
+                distanceInKm.setChecked(false);
+                mPref.setButtonRadio(Constants.DISTANCE_MILES);
+            }
+        });
+
     }
 
 }

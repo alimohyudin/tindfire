@@ -8,168 +8,66 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:padding="8dp"
-        android:orientation="horizontal"
+        android:background="@color/pink_opecity"
         android:layout_height="wrap_content">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/black"
-            android:layout_weight="0.8"
-            android:padding="5dp"
-            android:textAppearance="?android:textAppearanceMedium"
-            android:text="@string/auto_liker"/>
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="0.2"
+            android:padding="12dp"
             android:layout_gravity="center"
-            android:src="@mipmap/next_arrow"/>
+            android:textStyle="bold"
+            android:textAppearance="?android:textAppearanceMedium"
+            android:text="@string/distance"/>
     </LinearLayout>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/bg_view"/>
     <LinearLayout
         android:layout_width="match_parent"
-        android:padding="8dp"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_height="wrap_content">
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:layout_weight="0.8"
-            android:padding="5dp"
-            android:textAppearance="?android:textAppearanceMedium"
-            android:text="@string/set_youtr_location"/>
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="0.2"
-            android:layout_gravity="center"
-            android:src="@mipmap/next_arrow"/>
-    </LinearLayout>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/bg_view"/>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:padding="8dp"
-        android:orientation="horizontal"
-        android:layout_height="wrap_content">
-        <TextView
+            android:orientation="horizontal"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:paddingLeft="12dp"
+                android:layout_weight="0.8"
+                android:layout_gravity="center"
+                android:textAppearance="?android:textAppearanceMedium"
+                android:text="@string/km"/>
+            <RadioButton
+                android:id="@+id/distanceInKm"
+                android:layout_width="wrap_content"
+                android:layout_weight="0.2"
+                android:layout_marginRight="8dp"
+                android:padding="1dp"
+                android:checked="true"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:layout_weight="0.8"
-            android:padding="5dp"
-            android:textAppearance="?android:textAppearanceMedium"
-            android:text="@string/auto_liker"/>
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="0.2"
-            android:layout_gravity="center"
-            android:src="@mipmap/next_arrow"/>
-    </LinearLayout>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/bg_view"/>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:padding="8dp"
-        android:orientation="horizontal"
-        android:layout_height="wrap_content">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:layout_weight="0.8"
-            android:padding="5dp"
-            android:textAppearance="?android:textAppearanceMedium"
-            android:text="@string/number_of_profiles"/>
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="0.2"
-            android:layout_gravity="center"
-            android:src="@mipmap/next_arrow"/>
-    </LinearLayout>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/bg_view"/>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:padding="8dp"
-        android:orientation="horizontal"
-        android:layout_height="wrap_content">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:layout_weight="0.8"
-            android:padding="5dp"
-            android:textAppearance="?android:textAppearanceMedium"
-            android:text="@string/terms_of_sercvice"/>
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="0.2"
-            android:layout_gravity="center"
-            android:src="@mipmap/next_arrow"/>
-    </LinearLayout>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/bg_view"/>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:padding="8dp"
-        android:orientation="horizontal"
-        android:layout_height="wrap_content">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:layout_weight="0.8"
-            android:padding="5dp"
-            android:textAppearance="?android:textAppearanceMedium"
-            android:text="@string/help"/>
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="0.2"
-            android:layout_gravity="center"
-            android:src="@mipmap/next_arrow"/>
-    </LinearLayout>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/bg_view"/>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:padding="8dp"
-        android:orientation="horizontal"
-        android:layout_height="wrap_content">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:layout_weight="0.8"
-            android:padding="5dp"
-            android:textAppearance="?android:textAppearanceMedium"
-            android:text="@string/logout"/>
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="0.2"
-            android:layout_gravity="center"
-            android:src="@mipmap/next_arrow"/>
-    </LinearLayout>
+            android:orientation="horizontal"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:paddingLeft="12dp"
+                android:layout_weight="0.8"
+                android:layout_gravity="center"
+                android:textAppearance="?android:textAppearanceMedium"
+                android:text="@string/miles"/>
+            <RadioButton
+                android:id="@+id/distanceInMiles"
+                android:layout_width="wrap_content"
+                android:layout_weight="0.2"
+                android:layout_marginRight="8dp"
+                android:padding="1dp"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        </LinearLayout>
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"

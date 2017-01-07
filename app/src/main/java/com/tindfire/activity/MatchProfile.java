@@ -1,6 +1,7 @@
 package com.tindfire.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
@@ -53,6 +54,7 @@ public class MatchProfile extends AppCompatActivity {
     private ImageView mSideBar;
     private int recomondationnPosition;
     private RelativeLayout addRelativeLayout;
+    private LinearLayout chatIcon;
 
 
     @Override
@@ -89,6 +91,13 @@ public class MatchProfile extends AppCompatActivity {
             public void onPageScrollStateChanged(int state) {
             }
         });
+        chatIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MatchProfile.this,ChatActivity.class));
+
+            }
+        });
 
 
     }
@@ -118,6 +127,7 @@ public class MatchProfile extends AppCompatActivity {
         userPingtime =(TextView)findViewById(R.id.pingtime);
         userstatus =(TextView)findViewById(R.id.status);
         userAge =(TextView)findViewById(R.id.userAge);
+        chatIcon =(LinearLayout)findViewById(R.id.chatIcon);
         profilePhotoOfUser=new ArrayList<>();
         if(recomondationnPhotoList!=null){
            for(int i=0;i<recomondationnPhotoList.size();i++){
@@ -181,13 +191,13 @@ public class MatchProfile extends AppCompatActivity {
 
         if (diffInDays > 1) {
             System.err.println("Difference in number of days (2) : " + diffInDays);
-            userPingtime.setText(" , "+diffInDays + " " +"days ago");
+            userPingtime.setText(" "+diffInDays + " " +"days ago");
         } else if (diffHours > 24) {
             System.err.println(">24" +diffHours);
-            userPingtime.setText(" , "+diffHours +" " +"hours ago");
+            userPingtime.setText(" "+diffHours +" " +"hours ago");
         } else if (diffMinutes >= 1) {
             System.err.println("minutes" +diffMinutes);
-            userPingtime.setText(" , "+diffMinutes +" " +"minutes ago");
+            userPingtime.setText(" "+diffMinutes +" " +"minutes ago");
         }
 
     }

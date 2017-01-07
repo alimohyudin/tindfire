@@ -110,5 +110,18 @@ public class PreferenceManager {
     }
 
 
+    /**
+     *
+     * @param buttonRadio
+     */
+    public void setButtonRadio(String buttonRadio){
+        editor.putString(PreferenceConstant.BUTTON_RADIO,buttonRadio);
+        editor.commit();
+    }
+    public String getButtonRadio(){
+        return sharedPreferences.getString(PreferenceConstant.BUTTON_RADIO,"");
+    }
+
+
 
 }

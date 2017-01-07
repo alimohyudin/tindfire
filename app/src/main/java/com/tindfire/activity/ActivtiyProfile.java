@@ -43,6 +43,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.tindfire.activity.ActivityMain.categoryAdapter;
+
+
 /**
  * Created by vcareall on 7/12/16.
  */
@@ -132,13 +135,17 @@ public class ActivtiyProfile extends AppCompatActivity {
                 }else{
                     Utility.showMessage(context,Constants.NO_INTERNET_CONNECTION);
                 }
-
             }
         });
         rejectuserIv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                hitPassAPi();
+                if(recomondationnLike){
+                    hitPassAPi();
+                }else{
+                    Utility.showMessage(context,Constants.ALREADY_LIKE);
+                }
+
             }
         });
     }
@@ -159,6 +166,7 @@ public class ActivtiyProfile extends AppCompatActivity {
                     Log.d("ANdroid :","ActivityProfile :" +response.body().toString());
                     if(response.body().getStatus()==200){
                         likeUser.setImageResource(R.mipmap.profile_like_btns);
+                        categoryAdapter.passProfile(recomondationnPosition);
                     }else{
                     }
                 }catch (Exception e){
@@ -198,9 +206,7 @@ public class ActivtiyProfile extends AppCompatActivity {
                         Log.d("Android :","boolean valuse :" +b);
                         Utility.showMessage(context,"Liked");
                         likeUser.setImageResource(R.mipmap.profile_like_btn);
-                        recomondationnResultList.get(recomondationnPosition).setLike(true);
-                        Log.d("Android :","boolean valuse111 :" +recomondationnResultList.get(recomondationnPosition).isLike());
-
+                        categoryAdapter.likeProfile(recomondationnPosition);
 
                     }
                 }catch (Exception e){
@@ -272,17 +278,25 @@ public class ActivtiyProfile extends AppCompatActivity {
         if(recomondationnBirthDate.trim().length()>0){
             spliteDateAndTime(recomondationnBirthDate);
         }
-        if(recomondationnDisatance!=0){
-            userDistance.setText(recomondationnDisatance +" " +"miles away");
-        }else{
-            userDistance.setText("");
+        try{
+            if(recomondationnDisatance!=0){
+                if(mPref.getButtonRadio().equalsIgnoreCase(Constants.DISTANCE_KM)){
+                    int kilometerDist= (int) (recomondationnDisatance*1.609344);
+                    userDistance.setText(kilometerDist +" " +"km away");
+                    Log.d("Android :","kilometerDist :" +kilometerDist);
+                }else{
+                    userDistance.setText(recomondationnDisatance +" " +"miles away");
+                }
+            }else{
+                userDistance.setText("");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
+
         if(recomondationnLike){
             likeUser.setImageResource(R.mipmap.profile_like_btn);
         }
-//        if(recomondationnResultList.get(recomondationnPosition).isLike()){
-//            likeUser.setImageResource(R.mipmap.profile_like_btn);
-//        }
 
     }
 
@@ -407,6 +421,12 @@ public class ActivtiyProfile extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        finish();
+        try {
+            if(recomondationnResultList.get(recomondationnPosition).isLike()){
+                categoryAdapter.notifyDataSetChanged();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }
