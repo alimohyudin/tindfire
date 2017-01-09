@@ -32,6 +32,7 @@ import com.tindfire.model.RecomondationModel.RecomondationnPhoto;
 import com.tindfire.preference.PreferenceManager;
 import com.tindfire.util.Constants;
 import com.tindfire.util.Utility;
+import com.viewpagerindicator.CirclePageIndicator;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -79,6 +80,9 @@ public class ActivtiyProfile extends AppCompatActivity {
     private boolean recomondationnLike;
     private List<RecomondationResult> recomondationnResultList;
     private RelativeLayout addRelativeLayout;
+    private static int NUM_PAGES = 0;
+    private static int currentPage = 0;
+    private CirclePageIndicator indicator;
 
 
     @Override
@@ -109,18 +113,38 @@ public class ActivtiyProfile extends AppCompatActivity {
     }
 
     private void addListner() {
-        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                Log.d("Android:"," onPageScrolled viewPager.getCurrentItem():" +viewPager.getCurrentItem()+"");
-            }
+//
+//        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+//            @Override
+//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+//                Log.d("Android:"," onPageScrolled viewPager.getCurrentItem():" +viewPager.getCurrentItem()+"");
+//            }
+//
+//            @Override
+//            public void onPageSelected(int position) {
+//            }
+//
+//            @Override
+//            public void onPageScrollStateChanged(int state) {
+//            }
+//        });
+        // Pager listener over indicator
+        indicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
             @Override
             public void onPageSelected(int position) {
+                currentPage = position;
+
             }
 
             @Override
-            public void onPageScrollStateChanged(int state) {
+            public void onPageScrolled(int pos, float arg1, int arg2) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int pos) {
+
             }
         });
         likeUser.setOnClickListener(new View.OnClickListener() {
@@ -130,7 +154,7 @@ public class ActivtiyProfile extends AppCompatActivity {
                     if(!recomondationnLike){
                         hitLikeAPi();
                     }else{
-                        Utility.showMessage(context,Constants.ALREADY_LIKE);
+                        Utility.showMessage(context,Constants.ALREADY_LICK_USER);
                     }
                 }else{
                     Utility.showMessage(context,Constants.NO_INTERNET_CONNECTION);
@@ -140,10 +164,15 @@ public class ActivtiyProfile extends AppCompatActivity {
         rejectuserIv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(recomondationnLike){
-                    hitPassAPi();
+                if(Utility.isConnectingToInternet(context)){
+
+                    if(recomondationnLike){
+                        hitPassAPi();
+                    }else{
+//                        Utility.showMessage(context,Constants.ALREADY_LICK_USER);
+                    }
                 }else{
-                    Utility.showMessage(context,Constants.ALREADY_LIKE);
+                    Utility.showMessage(context,Constants.NO_INTERNET_CONNECTION);
                 }
 
             }
@@ -166,6 +195,7 @@ public class ActivtiyProfile extends AppCompatActivity {
                     Log.d("ANdroid :","ActivityProfile :" +response.body().toString());
                     if(response.body().getStatus()==200){
                         likeUser.setImageResource(R.mipmap.profile_like_btns);
+                        recomondationnLike=false;
                         categoryAdapter.passProfile(recomondationnPosition);
                     }else{
                     }
@@ -206,6 +236,7 @@ public class ActivtiyProfile extends AppCompatActivity {
                         Log.d("Android :","boolean valuse :" +b);
                         Utility.showMessage(context,"Liked");
                         likeUser.setImageResource(R.mipmap.profile_like_btn);
+                        recomondationnLike=true;
                         categoryAdapter.likeProfile(recomondationnPosition);
 
                     }
@@ -265,6 +296,17 @@ public class ActivtiyProfile extends AppCompatActivity {
         if(profilePhotoOfUser!=null){
             mCustomPagerAdapter = new CustomPagerAdapter(context);
             viewPager.setAdapter(mCustomPagerAdapter);
+        indicator = (CirclePageIndicator)
+                    findViewById(R.id.indicator);
+            indicator.setViewPager(viewPager);
+
+
+            final float density = getResources().getDisplayMetrics().density;
+            //Set circle indicator radius
+            indicator.setRadius(5 * density);
+
+            NUM_PAGES =profilePhotoOfUser.size();
+
         }
         if(recomondationnName.trim().length()>0){
             userProfileName.setText(recomondationnName);

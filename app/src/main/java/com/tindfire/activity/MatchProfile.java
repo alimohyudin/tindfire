@@ -24,6 +24,7 @@ import com.tindfire.R;
 import com.tindfire.model.GetMatchModel.GetMatchPhoto;
 import com.tindfire.util.Constants;
 import com.tindfire.util.Utility;
+import com.viewpagerindicator.CirclePageIndicator;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -55,6 +56,9 @@ public class MatchProfile extends AppCompatActivity {
     private int recomondationnPosition;
     private RelativeLayout addRelativeLayout;
     private LinearLayout chatIcon;
+    private static int NUM_PAGES = 0;
+    private static int currentPage = 0;
+    private CirclePageIndicator indicator;
 
 
     @Override
@@ -77,18 +81,22 @@ public class MatchProfile extends AppCompatActivity {
     }
 
     private void addListner() {
-        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                Log.d("Android:"," onPageScrolled viewPager.getCurrentItem():" +viewPager.getCurrentItem()+"");
-            }
+        indicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
             @Override
             public void onPageSelected(int position) {
+                currentPage = position;
+
             }
 
             @Override
-            public void onPageScrollStateChanged(int state) {
+            public void onPageScrolled(int pos, float arg1, int arg2) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int pos) {
+
             }
         });
         chatIcon.setOnClickListener(new View.OnClickListener() {
@@ -140,6 +148,16 @@ public class MatchProfile extends AppCompatActivity {
         if(profilePhotoOfUser!=null){
             mCustomPagerAdapter = new CustomPagerAdapter(context);
             viewPager.setAdapter(mCustomPagerAdapter);
+            indicator = (CirclePageIndicator)
+                    findViewById(R.id.indicator);
+            indicator.setViewPager(viewPager);
+
+
+            final float density = getResources().getDisplayMetrics().density;
+            //Set circle indicator radius
+            indicator.setRadius(5 * density);
+
+            NUM_PAGES =profilePhotoOfUser.size();
         }
         if(recomondationnName.trim().length()>0){
             userProfileName.setText(recomondationnName);

@@ -33,6 +33,7 @@ public class Constants {
     public static final String PASS_LIST_CONTENT="Do You Want To Pass List";
     public static final String ALREADY_LIKE="You have already like the Alluser";
     public static final String ALREADY_DISLIKE="You have already Dislike the Alluser";
+    public static final String ALREADY_LICK_USER="Already Likes User";
     public static final String FACEBOOK_LINK="https://www.facebook.com/tinderfire";
     public static final String TWITTER_LINK="https://twitter.com/TindRFire";
     public static final String DISTANCE_KM="KM";

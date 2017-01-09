@@ -3,11 +3,13 @@ package com.tindfire.activity;
 import android.content.Context;
 import android.support.multidex.MultiDex;
 
+import com.crashlytics.android.Crashlytics;
 import com.facebook.FacebookSdk;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.StandardExceptionParser;
 import com.google.android.gms.analytics.Tracker;
+import io.fabric.sdk.android.Fabric;
 
 /**
  * Created by vcareall on 2/9/16.
@@ -17,6 +19,7 @@ public class MultiDexApplication extends android.support.multidex.MultiDexApplic
     @Override
     public void onCreate() {
         super.onCreate();
+        Fabric.with(this, new Crashlytics());
         FacebookSdk.sdkInitialize(this.getApplicationContext());
         mInstance = this;
         AnalyticsTrackers.initialize(this);

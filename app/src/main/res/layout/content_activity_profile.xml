@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/black"
@@ -14,7 +14,19 @@
             android:id="@+id/ViewPager"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-    </LinearLayout>
+        <com.viewpagerindicator.CirclePageIndicator
+            android:id="@+id/indicator"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:gravity="bottom"
+            android:padding="10dip"
+            app:centered="true"
+            app:fillColor="#ff0099"
+            app:pageColor="#FF0000"
+            app:snap="false" />
+    </RelativeLayout>
     <ScrollView
         android:layout_width="match_parent"
         android:layout_weight="0.5"
