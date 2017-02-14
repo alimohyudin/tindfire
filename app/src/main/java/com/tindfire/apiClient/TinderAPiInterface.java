@@ -7,6 +7,7 @@ import com.tindfire.model.GetMatchModel.GetMatchExample;
 import com.tindfire.model.LikeResponce.LikeResponceExample;
 import com.tindfire.model.PassModel.PassData;
 import com.tindfire.model.RecomondationModel.RecomondationResponce;
+import com.tindfire.model.SuperLikeModel.SuperLikeExample;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -32,6 +33,8 @@ public interface TinderAPiInterface {
     Call<LikeResponceExample> getLikeResponceExampleCall(@Header("X-Auth-Token") String token, @Path("targetId") String targetId);
 
 
+    @POST("/like/{targetId}/super")
+    Call<SuperLikeExample> getSuperLikeExampleCall(@Header("X-Auth-Token") String token, @Path("targetId") String targetId);
 
     @GET("/pass/{targetId}")
     Call<PassData> getLiPassDataCall(@Header("X-Auth-Token") String token, @Path("targetId") String targetId);

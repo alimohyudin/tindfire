@@ -41,6 +41,7 @@ import com.tindfire.model.PassModel.PassData;
 import com.tindfire.model.RecomondationModel.RecomondationResponce;
 import com.tindfire.model.RecomondationModel.RecomondationResult;
 import com.tindfire.model.RecomondationModel.RecomondationnPhoto;
+import com.tindfire.model.SuperLikeModel.SuperLikeExample;
 import com.tindfire.preference.PreferenceConstant;
 import com.tindfire.preference.PreferenceManager;
 import com.tindfire.util.Constants;
@@ -178,7 +179,7 @@ public class ActivityMain extends AppCompatActivity {
     public void selectedLike(String id, int position) {
         if (Utility.isConnectingToInternet(context)) {
             hitLikeAPi(id, position);
-            recomondationResultList.get(position).setLike(true);
+//            recomondationResultList.get(position).setLike(true);
 //            createUser(id);
         } else {
             Utility.showMessage(context, Constants.NO_INTERNET_CONNECTION);
@@ -202,13 +203,33 @@ public class ActivityMain extends AppCompatActivity {
     public void selectedDislike(String id, int position) {
         if (Utility.isConnectingToInternet(context)) {
             hitPassAPi(id, position);
-            recomondationResultList.get(position).setLike(false);
+//            recomondationResultList.get(position).setLike(false);
         } else {
             Utility.showMessage(context, Constants.NO_INTERNET_CONNECTION);
         }
 
 
     }
+    public void selectedSuperLike(String id, int position) {
+
+        if (Utility.isConnectingToInternet(context)) {
+            hitSuperLikeAPi(id, position);
+//            recomondationResultList.get(position).setSuperlike(true);
+
+        } else {
+            Utility.showMessage(context, Constants.NO_INTERNET_CONNECTION);
+        }
+
+    }
+
+    public void refershAgainRecsApi() {
+        if (Utility.isConnectingToInternet(context)) {
+            hitGetRecsApi();
+        } else {
+            Utility.showMessage(context, Constants.NO_INTERNET_CONNECTION);
+        }
+    }
+
 
     public class RefreshEventDetector implements RecyclerRefreshLayout.OnRefreshListener {
 
@@ -343,8 +364,9 @@ public class ActivityMain extends AppCompatActivity {
                                     @Override
                                     public void run() {
                                         autoLike = true;
-                                        hitLikeAPi(getAllIdOfUser.get(finalI), finalI);
+                                        hitLikeAllAPi(getAllIdOfUser.get(finalI), finalI);
                                         dialog.dismiss();
+
                                     }
                                 };
                                 handler.postDelayed(runnable, 1000);
@@ -374,6 +396,37 @@ public class ActivityMain extends AppCompatActivity {
 
     }
 
+
+    private void hitLikeAllAPi(String id, final int i) {
+        progress_bar.setVisibility(View.VISIBLE);
+
+        TinderAPiInterface tinderAPiInterface = TinderAPiClient.getCLient().create(TinderAPiInterface.class);
+        Call<LikeResponceExample> likeResponceExampleCall = tinderAPiInterface.getLikeResponceExampleCall(mPref.getToken(), id);
+
+        likeResponceExampleCall.enqueue(new Callback<LikeResponceExample>() {
+            @Override
+            public void onResponse(Call<LikeResponceExample> call, Response<LikeResponceExample> response) {
+                progress_bar.setVisibility(View.INVISIBLE);
+                try {
+                    Log.d("ANdroid :", "ActivityProfile :" + response.body().toString());
+
+                    if (response.body().match() == Constants.MATCH_FALCE) {
+                        categoryAdapter.notifyDataSetChanged();
+                    } else {
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LikeResponceExample> call, Throwable t) {
+                progress_bar.setVisibility(View.INVISIBLE);
+            }
+        });
+
+    }
+
     private void hitLikeAPi(String id, final int i) {
         progress_bar.setVisibility(View.VISIBLE);
 
@@ -388,7 +441,7 @@ public class ActivityMain extends AppCompatActivity {
                     Log.d("ANdroid :", "ActivityProfile :" + response.body().toString());
 
                     if (response.body().match() == Constants.MATCH_FALCE) {
-
+                        recomondationResultList.remove(i);
                         categoryAdapter.notifyDataSetChanged();
 
 
@@ -405,6 +458,33 @@ public class ActivityMain extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void hitSuperLikeAPi(String id, final int i){
+        progress_bar.setVisibility(View.VISIBLE);
+        TinderAPiInterface tinderAPiInterface=TinderAPiClient.getCLient().create(TinderAPiInterface.class);
+        Call<SuperLikeExample> superLikeExampleCall = tinderAPiInterface.getSuperLikeExampleCall(mPref.getToken(), id);
+
+        superLikeExampleCall.enqueue(new Callback<SuperLikeExample>() {
+            @Override
+            public void onResponse(Call<SuperLikeExample> call, Response<SuperLikeExample> response) {
+                progress_bar.setVisibility(View.INVISIBLE);
+                try {
+                    Log.d("ANdroid :", "ActivityProfile :" + response.body().toString());
+                    if(response.body().getStatus()==200){
+                        recomondationResultList.remove(i);
+                        categoryAdapter.notifyDataSetChanged();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SuperLikeExample> call, Throwable t) {
+                progress_bar.setVisibility(View.INVISIBLE);
+            }
+        });
     }
 
     private void hitGetRecsApi() {
@@ -433,7 +513,7 @@ public class ActivityMain extends AppCompatActivity {
                                     mNolist.setVisibility(View.GONE);
                                     recomondationResultList = response.body().getResults();
                                     mRecycleView.setHasFixedSize(true);
-                                    RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(), 3);
+                                    RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(), 2);
                                     mRecycleView.setLayoutManager(layoutManager);
                                     categoryAdapter = new CategoryAdapter(ActivityMain.this, context, recomondationResultList);
                                     mRecycleView.setAdapter(categoryAdapter);
@@ -498,10 +578,12 @@ public class ActivityMain extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try {
-                    if (recomondationResultList.get(3).isLike() && recomondationResultList.get(2).isLike()) {
-                        showPassAndRefereshDailog();
-                    } else {
-                    }
+                    showPassAndRefereshDailog();
+
+//                    if (recomondationResultList.get(3).isLike() && recomondationResultList.get(2).isLike()) {
+//                        showPassAndRefereshDailog();
+//                    } else {
+//                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -634,17 +716,19 @@ public class ActivityMain extends AppCompatActivity {
                 if (Utility.isConnectingToInternet(context)) {
 
                     try {
-                        List<String> getAllIdOfUser = categoryAdapter.getAllId();
+                        final List<String> getAllIdOfUser = categoryAdapter.getAllId();
                         dialog.dismiss();
                         if (getAllIdOfUser != null) {
                             for (int i = 0; i < getAllIdOfUser.size(); i++) {
                                 Log.d("Android :", "getAllIdOfUser size  id:" + getAllIdOfUser.get(i));
-                                recomondationResultList.get(i).setLike(false);
-                                hitPassAPi(getAllIdOfUser.get(i), i);
+//                                recomondationResultList.get(i).setLike(false);
+                               final int valueId=i;
+                                hitPassAllAPi(getAllIdOfUser.get(valueId), valueId);
                                 dialog.dismiss();
                             }
                             Log.d("Android :", "getAllIdOfUser size :" + getAllIdOfUser.size());
                         }
+                        hitGetRecsApi();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -666,7 +750,7 @@ public class ActivityMain extends AppCompatActivity {
 
     }
 
-    private void hitPassAPi(String id, final int i) {
+    private void hitPassAllAPi(String id, final int i) {
         progress_bar.setVisibility(View.VISIBLE);
 
         TinderAPiInterface tinderAPiInterface = TinderAPiClient.getCLient().create(TinderAPiInterface.class);
@@ -680,6 +764,38 @@ public class ActivityMain extends AppCompatActivity {
                     Log.d("ANdroid :", "ActivityProfile :" + response.body().toString());
                     if (response.body().getStatus() == 200) {
                         categoryAdapter.notifyDataSetChanged();
+
+                    } else {
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PassData> call, Throwable t) {
+                progress_bar.setVisibility(View.INVISIBLE);
+            }
+        });
+
+    }
+
+    private void hitPassAPi(String id, final int i) {
+        progress_bar.setVisibility(View.VISIBLE);
+
+        TinderAPiInterface tinderAPiInterface = TinderAPiClient.getCLient().create(TinderAPiInterface.class);
+        Call<PassData> likePassData = tinderAPiInterface.getLiPassDataCall(mPref.getToken(), id);
+
+        likePassData.enqueue(new Callback<PassData>() {
+            @Override
+            public void onResponse(Call<PassData> call, Response<PassData> response) {
+                progress_bar.setVisibility(View.INVISIBLE);
+                try {
+                    Log.d("ANdroid :", "ActivityProfile :" + response.body().toString());
+                    if (response.body().getStatus() == 200) {
+                        recomondationResultList.remove(i);
+                        categoryAdapter.notifyDataSetChanged();
+
                     } else {
                     }
                 } catch (Exception e) {
@@ -713,7 +829,7 @@ public class ActivityMain extends AppCompatActivity {
                             recomondationResultList = response.body().getResults();
                             Log.d("Android :", "size of again recom :" + recomondationResultList.size());
                             mRecycleView.setHasFixedSize(true);
-                            RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(), 3);
+                            RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(), 2);
                             mRecycleView.setLayoutManager(layoutManager);
                             categoryAdapter = new CategoryAdapter(ActivityMain.this, context, recomondationResultList);
                             mRecycleView.setAdapter(categoryAdapter);

@@ -12,6 +12,8 @@ import java.util.List;
 public class RecomondationResult implements Serializable {
 
     private boolean isSelected = false;
+    private boolean isSuperLikeSelected=false;
+    private boolean isPassSelected=false;
     @SerializedName("distance_mi")
     @Expose
     private Integer distanceMi;
@@ -65,6 +67,8 @@ public class RecomondationResult implements Serializable {
     private String birthDateInfo;
 
     private boolean isLike;
+
+    private boolean isSuperlike;
 
     public boolean isLike() {
         return isLike;
@@ -207,10 +211,45 @@ public class RecomondationResult implements Serializable {
         this.birthDateInfo = birthDateInfo;
     }
 
+
+    public boolean isSuperlike() {
+        return isSuperlike;
+    }
+
+    public void setSuperlike(boolean superlike) {
+        isSuperlike = superlike;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
+    }
+
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public boolean isSuperLikeSelected() {
+        return isSuperLikeSelected;
+    }
+
+    public void setSuperLikeSelected(boolean superLikeSelected) {
+        isSuperLikeSelected = superLikeSelected;
+    }
+
+    public boolean isPassSelected() {
+        return isPassSelected;
+    }
+
+    public void setPassSelected(boolean passSelected) {
+        isPassSelected = passSelected;
+    }
+
     @Override
     public String toString() {
         return "RecomondationResult{" +
                 "bio='" + bio + '\'' +
+                ", isSelected=" + isSelected +
                 ", distanceMi=" + distanceMi +
                 ", connectionCount=" + connectionCount +
                 ", commonLikeCount=" + commonLikeCount +
@@ -221,18 +260,12 @@ public class RecomondationResult implements Serializable {
                 ", birthDate='" + birthDate + '\'' +
                 ", name='" + name + '\'' +
                 ", pingTime='" + pingTime + '\'' +
+                ", photos=" + photos +
                 ", sNumber=" + sNumber +
                 ", gender=" + gender +
                 ", birthDateInfo='" + birthDateInfo + '\'' +
+                ", isLike=" + isLike +
+                ", isSuperlike=" + isSuperlike +
                 '}';
-    }
-
-    public void setSelected(boolean selected) {
-        isSelected = selected;
-    }
-
-
-    public boolean isSelected() {
-        return isSelected;
     }
 }

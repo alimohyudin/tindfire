@@ -20,8 +20,6 @@ import com.tindfire.model.RecomondationModel.RecomondationnPhoto;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.tindfire.R.mipmap.like;
-
 /**
  * Created by vcareall on 7/12/16.
  */
@@ -54,9 +52,14 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             final List<RecomondationnPhoto> recomondationnPhotoList=recomondationResultList.get(position).getPhotos();
             if(recomondationResultList!=null){
                 if(recomondationResultList.get(position).isLike()){
-                    viewHolder.userBt.setImageResource(R.mipmap.like_colors);
+                    viewHolder.likeIvs.setImageResource(R.mipmap.like_colors);
                 }else{
-                    viewHolder.userBt.setImageResource(like);
+                    viewHolder.likeIvs.setImageResource(R.mipmap.like);
+                }
+                if(recomondationResultList.get(position).isSuperlike()){
+                    viewHolder.superLikeIv.setImageResource(R.mipmap.superlike);
+                }else{
+                    viewHolder.superLikeIv.setImageResource(R.mipmap.superlike_deactive);
                 }
                 if(recomondationnPhotoList!=null){
                     String userImage=recomondationnPhotoList.get(0).getUrl();
@@ -95,21 +98,61 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                 recomondationResultList.get(position).isLike());
                     }
                 });
-                viewHolder.linarlayoutimage.setOnClickListener(new View.OnClickListener() {
+                viewHolder.likeIvLL.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         model.setSelected(!model.isSelected());
-                        viewHolder.userBt.setImageResource(model.isSelected() ? R.mipmap.like_colors : R.mipmap.reject);
+                        viewHolder.likeIvs.setImageResource(model.isSelected() ? R.mipmap.like_colors : R.mipmap.like);
                         if(model.isSelected()){
                             activityMain.selectedLike(model.getId(),position);
                             recomondationRejected.add(model.getId());
+
                             Log.d("ANdroid :","recomondationRejected ::" +recomondationRejected.size());
                         }else{
+//                            activityMain.selectedDislike(model.getId(),position);
+//                            recomondationRejected.remove(model.getId());
+//                            Log.d("ANdroid :","recomondationRejected_remove ::" +recomondationRejected.size());
+
+                        }
+                        if(recomondationResultList.size()==2){
+                            activityMain.refershAgainRecsApi();
+                        }
+                    }
+                });
+
+                //for pass the
+                viewHolder.passll.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        model.setPassSelected(!model.isPassSelected());
+                        if(model.isPassSelected()){
                             activityMain.selectedDislike(model.getId(),position);
-                            recomondationRejected.remove(model.getId());
+
+                        }
+                        if(recomondationResultList.size()==2){
+                            activityMain.refershAgainRecsApi();
+                        }
+                    }
+                });
+                viewHolder.superlikeLL.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        model.setSuperLikeSelected(!model.isSuperLikeSelected());
+                        viewHolder.superLikeIv.setImageResource(model.isSuperLikeSelected() ? R.mipmap.superlike : R.mipmap.superlike_deactive);
+                        if(model.isSuperLikeSelected()){
+                            activityMain.selectedSuperLike(model.getId(),position);
+//                           recomondationRejected.add(model.getId());
+                            Log.d("ANdroid :","recomondationRejected ::" +recomondationRejected.size());
+                        }else{
+//                            activityMain.selectedDislike(model.getId(),position);
+//                            recomondationRejected.remove(model.getId());
                             Log.d("ANdroid :","recomondationRejected_remove ::" +recomondationRejected.size());
 
                         }
+                        if(recomondationResultList.size()==2){
+                            activityMain.refershAgainRecsApi();
+                        }
+
                     }
                 });
             }
@@ -130,14 +173,18 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             super(itemView);
             this.itemView = itemView;
             userName = (TextView) itemView.findViewById(R.id.userName);
-            userBt = (ImageView) itemView.findViewById(R.id.userBt);
+            likeIvs = (ImageView) itemView.findViewById(R.id.likeIV);
+            passIv = (ImageView) itemView.findViewById(R.id.passIv);
+            superLikeIv = (ImageView) itemView.findViewById(R.id.superLikeIv);
             userImage = (ImageView) itemView.findViewById(R.id.userNmage);
-            linarlayoutimage = (LinearLayout) itemView.findViewById(R.id.linarlayoutimage);
+            likeIvLL = (LinearLayout) itemView.findViewById(R.id.likeIvLL);
+            superlikeLL = (LinearLayout) itemView.findViewById(R.id.superlikeLL);
+            passll = (LinearLayout) itemView.findViewById(R.id.passll);
         }
         View itemView;
         TextView userName;
-        ImageView userBt,userImage;
-        LinearLayout linarlayoutimage;
+        ImageView likeIvs,userImage,superLikeIv,passIv;
+        LinearLayout likeIvLL,superlikeLL,passll;
     }
     public List<String> getAllId(){
         List<String> recomondationResults=new ArrayList<>();

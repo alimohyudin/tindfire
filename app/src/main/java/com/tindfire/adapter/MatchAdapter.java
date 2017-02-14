@@ -89,7 +89,7 @@ public class MatchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             super(itemView);
             this.itemView = itemView;
             userName = (TextView) itemView.findViewById(R.id.userName);
-            userBt = (ImageView) itemView.findViewById(R.id.userBt);
+            userBt = (ImageView) itemView.findViewById(R.id.likeIV);
             userImage = (ImageView) itemView.findViewById(R.id.userNmage);
         }
         View itemView;

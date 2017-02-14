@@ -28,8 +28,8 @@
         android:ellipsize="end"
         android:layout_height="match_parent" />
         <LinearLayout
-            android:id="@+id/linarlayoutimage"
-            android:layout_width="40dp"
+            android:id="@+id/likeIvLL"
+            android:layout_width="30dp"
             android:layout_marginRight="5dp"
             android:gravity="center"
             android:layout_centerVertical="true"
@@ -37,11 +37,39 @@
             android:layout_alignParentEnd="true"
             android:layout_height="30dp">
         <ImageView
-            android:id="@+id/userBt"
+            android:id="@+id/likeIV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:src="@mipmap/like"/>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/superlikeLL"
+            android:layout_width="30dp"
+            android:gravity="center"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/likeIvLL"
+            android:layout_height="30dp">
+            <ImageView
+                android:id="@+id/superLikeIv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@mipmap/superlike_deactive"/>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/passll"
+            android:layout_width="30dp"
+            android:gravity="center"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/superlikeLL"
+            android:layout_height="30dp">
+            <ImageView
+                android:id="@+id/passIv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@mipmap/reject"/>
         </LinearLayout>
     </RelativeLayout>
 </RelativeLayout>
