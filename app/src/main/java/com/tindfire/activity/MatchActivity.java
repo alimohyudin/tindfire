@@ -101,7 +101,7 @@ public class MatchActivity extends AppCompatActivity {
                             matchRLView.setVisibility(View.VISIBLE);
                             mNolist.setVisibility(View.GONE);
                             matchRLView.setHasFixedSize(true);
-                            RecyclerView.LayoutManager layoutManager=new GridLayoutManager(getApplicationContext(),3);
+                            RecyclerView.LayoutManager layoutManager=new GridLayoutManager(getApplicationContext(),2);
                             matchRLView.setLayoutManager(layoutManager);
                             matchAdapter = new MatchAdapter(MatchActivity.this,context,getMatchMatchList);
                             matchRLView.setAdapter(matchAdapter);

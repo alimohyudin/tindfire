@@ -2,6 +2,7 @@ package com.tindfire.apiClient;
 
 import com.tindfire.model.AuthModel.AuthRequest;
 import com.tindfire.model.AuthModel.AuthResponceExample;
+import com.tindfire.model.FacebookFriendsModel.FacebookFriendsExample;
 import com.tindfire.model.GetMatchModel.AuthMatch;
 import com.tindfire.model.GetMatchModel.GetMatchExample;
 import com.tindfire.model.LikeResponce.LikeResponceExample;
@@ -43,7 +44,8 @@ public interface TinderAPiInterface {
     @POST("/updates")
     Call<GetMatchExample> getMatchExampleCall(@Header("X-Auth-Token") String token, @Body AuthMatch authMatch);
 
-
+    @GET("/group/friends")
+    Call<FacebookFriendsExample> getFacebookFriendsExampleCall(@Header("X-Auth-Token") String token);
 
 
 }

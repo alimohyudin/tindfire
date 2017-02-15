@@ -3,6 +3,7 @@ package com.tindfire.activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -18,6 +19,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.tindfire.R;
@@ -29,6 +32,7 @@ import com.tindfire.model.PassModel.PassData;
 import com.tindfire.model.RecomondationModel.RecomondationProcessedFile;
 import com.tindfire.model.RecomondationModel.RecomondationResult;
 import com.tindfire.model.RecomondationModel.RecomondationnPhoto;
+import com.tindfire.model.SuperLikeModel.SuperLikeExample;
 import com.tindfire.preference.PreferenceManager;
 import com.tindfire.util.Constants;
 import com.tindfire.util.Utility;
@@ -75,7 +79,7 @@ public class ActivtiyProfile extends AppCompatActivity {
     private ImageView likeUser;
     private PreferenceManager mPref;
     private ProgressDialog progressDialog;
-    private ImageView rejectuserIv;
+    private ImageView rejectuserIv,superlikeIv;
     private int recomondationnPosition;
     private boolean recomondationnLike;
     private List<RecomondationResult> recomondationnResultList;
@@ -151,11 +155,12 @@ public class ActivtiyProfile extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(Utility.isConnectingToInternet(context)){
-                    if(!recomondationnLike){
-                        hitLikeAPi();
-                    }else{
-                        Utility.showMessage(context,Constants.ALREADY_LICK_USER);
-                    }
+                    showLikeDailog();
+//                    if(!recomondationnLike){
+//                        hitLikeAPi();
+//                    }else{
+//                        Utility.showMessage(context,Constants.ALREADY_LICK_USER);
+//                    }
                 }else{
                     Utility.showMessage(context,Constants.NO_INTERNET_CONNECTION);
                 }
@@ -165,16 +170,145 @@ public class ActivtiyProfile extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(Utility.isConnectingToInternet(context)){
-
-                    if(recomondationnLike){
-                        hitPassAPi();
-                    }else{
-//                        Utility.showMessage(context,Constants.ALREADY_LICK_USER);
-                    }
+                    showPassDailog();
+//                    if(recomondationnLike){
+//                        hitPassAPi();
+//                    }else{
+////                        Utility.showMessage(context,Constants.ALREADY_LICK_USER);
+//                    }
                 }else{
                     Utility.showMessage(context,Constants.NO_INTERNET_CONNECTION);
                 }
 
+            }
+        });
+        superlikeIv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(Utility.isConnectingToInternet(context)){
+                    showSuperLikeDailog();
+                }else{
+                    Utility.showMessage(context,Constants.NO_INTERNET_CONNECTION);
+                }
+            }
+        });
+    }
+    private void showSuperLikeDailog() {
+        MaterialDialog.Builder builder = new MaterialDialog.Builder(this)
+                .title(Constants.SUPERLIKE_TITLE)
+                .content(Constants.SUPERLIKE_LIST_USER)
+                .positiveText(Constants.AGREES)
+                .negativeText(Constants.DISAGRESS);
+        builder.onPositive(new MaterialDialog.SingleButtonCallback() {
+            @Override
+            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                if (Utility.isConnectingToInternet(context)) {
+
+                    dialog.dismiss();
+                    superlikeIv.setImageResource(R.mipmap.superlike_active);
+                    hitSuperLikeAPi();
+                } else {
+                    Utility.showMessage(context, Constants.NO_INTERNET_CONNECTION);
+                }
+
+            }
+        });
+        builder.onNegative(new MaterialDialog.SingleButtonCallback() {
+            @Override
+            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                dialog.dismiss();
+            }
+        });
+        MaterialDialog dialog = builder.build();
+        dialog.show();
+
+    }
+    private void showLikeDailog() {
+        MaterialDialog.Builder builder = new MaterialDialog.Builder(this)
+                .title(Constants.LIKE_TITLE)
+                .content(Constants.LIKE_LIST_USER)
+                .positiveText(Constants.AGREES)
+                .negativeText(Constants.DISAGRESS);
+        builder.onPositive(new MaterialDialog.SingleButtonCallback() {
+            @Override
+            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                if (Utility.isConnectingToInternet(context)) {
+
+                    dialog.dismiss();
+                    likeUser.setImageResource(R.mipmap.profile_like_btn);
+                    hitLikeAPi();
+                } else {
+                    Utility.showMessage(context, Constants.NO_INTERNET_CONNECTION);
+                }
+
+            }
+        });
+        builder.onNegative(new MaterialDialog.SingleButtonCallback() {
+            @Override
+            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                dialog.dismiss();
+            }
+        });
+        MaterialDialog dialog = builder.build();
+        dialog.show();
+
+    }
+    private void showPassDailog() {
+        MaterialDialog.Builder builder = new MaterialDialog.Builder(this)
+                .title(Constants.PASS_LIST_TITLE)
+                .content(Constants.PASS_LIST_USER)
+                .positiveText(Constants.AGREES)
+                .negativeText(Constants.DISAGRESS);
+        builder.onPositive(new MaterialDialog.SingleButtonCallback() {
+            @Override
+            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                if (Utility.isConnectingToInternet(context)) {
+
+                    dialog.dismiss();
+                    hitPassAPi();
+                } else {
+                    Utility.showMessage(context, Constants.NO_INTERNET_CONNECTION);
+                }
+
+            }
+        });
+        builder.onNegative(new MaterialDialog.SingleButtonCallback() {
+            @Override
+            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                dialog.dismiss();
+            }
+        });
+        MaterialDialog dialog = builder.build();
+        dialog.show();
+
+    }
+    private void hitSuperLikeAPi(){
+        progressDialog=new ProgressDialog(context);
+        progressDialog.setMessage(Constants.PLEASE_WAIT);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+        TinderAPiInterface tinderAPiInterface=TinderAPiClient.getCLient().create(TinderAPiInterface.class);
+        Call<SuperLikeExample> superLikeExampleCall = tinderAPiInterface.getSuperLikeExampleCall(mPref.getToken(), recomondationnID);
+
+        superLikeExampleCall.enqueue(new Callback<SuperLikeExample>() {
+            @Override
+            public void onResponse(Call<SuperLikeExample> call, Response<SuperLikeExample> response) {
+                progressDialog.dismiss();
+                try {
+                    Log.d("ANdroid :", "ActivityProfile :" + response.body().toString());
+                    if(response.body().getStatus()==200){
+                        categoryAdapter.removePositonFromProfile(recomondationnPosition);
+                        finish();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SuperLikeExample> call, Throwable t) {
+                progressDialog.dismiss();
             }
         });
     }
@@ -194,9 +328,11 @@ public class ActivtiyProfile extends AppCompatActivity {
                 try{
                     Log.d("ANdroid :","ActivityProfile :" +response.body().toString());
                     if(response.body().getStatus()==200){
-                        likeUser.setImageResource(R.mipmap.profile_like_btns);
-                        recomondationnLike=false;
-                        categoryAdapter.passProfile(recomondationnPosition);
+//                        likeUser.setImageResource(R.mipmap.profile_like_btns);
+//                        recomondationnLike=false;
+//                        categoryAdapter.passProfile(recomondationnPosition);
+                        categoryAdapter.removePositonFromProfile(recomondationnPosition);
+                        finish();
                     }else{
                     }
                 }catch (Exception e){
@@ -231,13 +367,16 @@ public class ActivtiyProfile extends AppCompatActivity {
                         Match match=(Match)response.body().match();
                         Log.d("Android :","match valuse :" +match.toString());
                         Utility.showMessage(context,"Match");
+                        finish();
                     }else if(obj instanceof Boolean){
                         Boolean b=(Boolean)response.body().match();
                         Log.d("Android :","boolean valuse :" +b);
                         Utility.showMessage(context,"Liked");
-                        likeUser.setImageResource(R.mipmap.profile_like_btn);
-                        recomondationnLike=true;
-                        categoryAdapter.likeProfile(recomondationnPosition);
+//                        likeUser.setImageResource(R.mipmap.profile_like_btn);
+//                        recomondationnLike=true;
+//                        categoryAdapter.likeProfile(recomondationnPosition);
+                        categoryAdapter.removePositonFromProfile(recomondationnPosition);
+                        finish();
 
                     }
                 }catch (Exception e){
@@ -281,6 +420,7 @@ public class ActivtiyProfile extends AppCompatActivity {
         userAge =(TextView)findViewById(R.id.userAge);
         likeUser =(ImageView)findViewById(R.id.likeUser);
         rejectuserIv =(ImageView)findViewById(R.id.rejectuserIv);
+        superlikeIv =(ImageView)findViewById(R.id.superlikeIv);
         addRelativeLayout=(RelativeLayout)findViewById(R.id.addRelative);
         addRelativeLayout.addView(MyAdmovAds.loadAdmodAd(context));
         profilePhotoOfUser=new ArrayList<>();

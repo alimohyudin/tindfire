@@ -122,6 +122,18 @@
             android:layout_height="80dp"
             android:src="@mipmap/profile_reject_btn" />
         </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:gravity="center"
+                android:id="@+id/superlike_rl"
+                android:layout_weight="0.5"
+                android:layout_height="match_parent">
+                <ImageView
+                    android:id="@+id/superlikeIv"
+                    android:layout_width="60dp"
+                    android:layout_height="80dp"
+                    android:src="@mipmap/superlike_deactives" />
+            </LinearLayout>
         <LinearLayout
             android:id="@+id/like_rl"
             android:layout_width="match_parent"

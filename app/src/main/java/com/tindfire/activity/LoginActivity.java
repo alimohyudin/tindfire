@@ -9,12 +9,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ImageView;
 
+import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
 import com.facebook.login.LoginBehavior;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
@@ -70,6 +72,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void fbLogin() {
+
         LoginManager.getInstance().setLoginBehavior(LoginBehavior.WEB_ONLY);
         LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
@@ -79,7 +82,6 @@ public class LoginActivity extends AppCompatActivity {
                 facebooId=loginResult.getAccessToken().getUserId();
                 Log.v("fbToken", fbToken);
                 Log.v("fbToken userid", loginResult.getAccessToken().getUserId());
-
                 GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
                             @Override
                             public void onCompleted(JSONObject object, GraphResponse response) {

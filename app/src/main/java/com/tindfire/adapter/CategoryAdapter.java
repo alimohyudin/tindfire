@@ -114,7 +114,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 //                            Log.d("ANdroid :","recomondationRejected_remove ::" +recomondationRejected.size());
 
                         }
-                        if(recomondationResultList.size()==2){
+                        if(recomondationResultList.size()==1){
                             activityMain.refershAgainRecsApi();
                         }
                     }
@@ -129,7 +129,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             activityMain.selectedDislike(model.getId(),position);
 
                         }
-                        if(recomondationResultList.size()==2){
+                        if(recomondationResultList.size()==1){
                             activityMain.refershAgainRecsApi();
                         }
                     }
@@ -149,7 +149,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             Log.d("ANdroid :","recomondationRejected_remove ::" +recomondationRejected.size());
 
                         }
-                        if(recomondationResultList.size()==2){
+                        if(recomondationResultList.size()==1){
                             activityMain.refershAgainRecsApi();
                         }
 
@@ -214,6 +214,10 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public void passProfile(int position) {
         recomondationResultList.get(position).setLike(false);
         Log.d("Android :","passProfile :" +recomondationResultList.get(position).isLike());
+        notifyDataSetChanged();
+    }
+    public void removePositonFromProfile(int position){
+        recomondationResultList.remove(position);
         notifyDataSetChanged();
     }
 

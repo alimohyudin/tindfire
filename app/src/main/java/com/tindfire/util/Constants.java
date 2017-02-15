@@ -28,16 +28,21 @@ public class Constants {
     public static final String DISAGRESS="Disagree";
     public static final Object MATCH_FALCE=false;
     public static final String AUTO_LIKE_TITLE="AUTO LIKE";
-    public static final String AUTO_LIKE_CONTENT="Like Selected Profiles";
+    public static final String AUTO_LIKE_CONTENT="Like selected profiles";
     public static final String PASS_LIST_TITLE="PASS";
-    public static final String PASS_LIST_CONTENT="Do You Want To Pass List";
+    public static final String PASS_LIST_CONTENT="Do you want to pass List";
     public static final String ALREADY_LIKE="You have already like the Alluser";
-    public static final String ALREADY_DISLIKE="You have already Dislike the Alluser";
-    public static final String ALREADY_LICK_USER="Already Likes User";
+    public static final String ALREADY_DISLIKE="You have already dislike the alluser";
+    public static final String ALREADY_LICK_USER="Already likes user";
     public static final String FACEBOOK_LINK="https://www.facebook.com/tinderfire";
     public static final String TWITTER_LINK="https://twitter.com/TindRFire";
     public static final String DISTANCE_KM="KM";
     public static final String DISTANCE_MILES="MILES";
+    public static final String PASS_LIST_USER="Do you want to pass user";
+    public static final String LIKE_LIST_USER="Do you want to like user";
+    public static final String SUPERLIKE_LIST_USER="Do you want to superlike user";
+    public static final String LIKE_TITLE="Like";
+    public static final String SUPERLIKE_TITLE="Superlike";
 
 
 }
