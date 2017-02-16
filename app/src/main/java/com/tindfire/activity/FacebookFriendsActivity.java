@@ -2,6 +2,7 @@ package com.tindfire.activity;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
@@ -31,8 +32,6 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static com.tindfire.activity.ActivityMain.categoryAdapter;
 
 /**
  * Created by vcareall on 7/1/17.
@@ -144,5 +143,12 @@ public class FacebookFriendsActivity extends AppCompatActivity {
                 nolist.setText(Constants.NO_LIST_AVAILABLE);
             }
         });
+    }
+
+    public void clickFacebookFriends(String profileId) {
+        Intent intent=new Intent(FacebookFriendsActivity.this,FacebookFriendsProfileActivity.class);
+        intent.putExtra(Constants.PROFILE_ID,profileId);
+        startActivity(intent);
+
     }
 }

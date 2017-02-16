@@ -1,6 +1,7 @@
 package com.tindfire.adapter;
 
 import android.content.Context;
+import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -114,8 +115,16 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 //                            Log.d("ANdroid :","recomondationRejected_remove ::" +recomondationRejected.size());
 
                         }
+
                         if(recomondationResultList.size()==1){
-                            activityMain.refershAgainRecsApi();
+                            Handler handler=new Handler();
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    activityMain.refershAgainRecsApi();
+                                }
+                            },3000);
+
                         }
                     }
                 });
@@ -130,7 +139,14 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
                         }
                         if(recomondationResultList.size()==1){
-                            activityMain.refershAgainRecsApi();
+                            Handler handler=new Handler();
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    activityMain.refershAgainRecsApi();
+                                }
+                            },3000);
+
                         }
                     }
                 });
@@ -150,7 +166,13 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
                         }
                         if(recomondationResultList.size()==1){
-                            activityMain.refershAgainRecsApi();
+                            Handler handler=new Handler();
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    activityMain.refershAgainRecsApi();
+                                }
+                            },3000);
                         }
 
                     }

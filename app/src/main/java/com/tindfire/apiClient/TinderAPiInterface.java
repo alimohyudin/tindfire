@@ -3,6 +3,7 @@ package com.tindfire.apiClient;
 import com.tindfire.model.AuthModel.AuthRequest;
 import com.tindfire.model.AuthModel.AuthResponceExample;
 import com.tindfire.model.FacebookFriendsModel.FacebookFriendsExample;
+import com.tindfire.model.FacebookFriendsProfileModel.FacebookFriendsProfileExample;
 import com.tindfire.model.GetMatchModel.AuthMatch;
 import com.tindfire.model.GetMatchModel.GetMatchExample;
 import com.tindfire.model.LikeResponce.LikeResponceExample;
@@ -47,5 +48,7 @@ public interface TinderAPiInterface {
     @GET("/group/friends")
     Call<FacebookFriendsExample> getFacebookFriendsExampleCall(@Header("X-Auth-Token") String token);
 
+    @GET("/user/{targetId}")
+    Call<FacebookFriendsProfileExample> getFacebookFriendsProfileExampleCall(@Header("X-Auth-Token") String token, @Path("targetId") String targetId);
 
 }

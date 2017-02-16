@@ -97,4 +97,18 @@ public class SuperLikes {
     public void setResetsAt(String resetsAt) {
         this.resetsAt = resetsAt;
     }
+
+    @Override
+    public String toString() {
+        return "SuperLikes{" +
+                "alcRemaining=" + alcRemaining +
+                ", remaining=" + remaining +
+                ", newAlcRemaining=" + newAlcRemaining +
+                ", allotment=" + allotment +
+                ", superlikeRefreshAmount=" + superlikeRefreshAmount +
+                ", superlikeRefreshInterval=" + superlikeRefreshInterval +
+                ", superlikeRefreshIntervalUnit='" + superlikeRefreshIntervalUnit + '\'' +
+                ", resetsAt='" + resetsAt + '\'' +
+                '}';
+    }
 }

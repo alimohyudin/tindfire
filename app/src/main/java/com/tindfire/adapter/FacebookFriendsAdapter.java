@@ -5,10 +5,15 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.tindfire.R;
 import com.tindfire.activity.FacebookFriendsActivity;
+import com.tindfire.model.FacebookFriendsModel.FacebookFriendsPhoto;
+import com.tindfire.model.FacebookFriendsModel.FacebookFriendsProcessedFile;
 import com.tindfire.model.FacebookFriendsModel.FacebookFriendsResult;
 
 import java.util.List;
@@ -36,9 +41,34 @@ public class FacebookFriendsAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         final FacebookFriendsAdapter.FacebookFriendViewHolder viewHolder = (FacebookFriendsAdapter.FacebookFriendViewHolder) holder;
-        viewHolder.facebookUserName.setText(facebookFriendsResultList.get(position).getName());
+        try{
+            viewHolder.facebookUserName.setText(facebookFriendsResultList.get(position).getName());
+            List<FacebookFriendsPhoto> facebookFriendsPhotoList=facebookFriendsResultList.get(position).getPhoto();
+            if(facebookFriendsPhotoList!=null){
+                List<FacebookFriendsProcessedFile> facebookFriendsProcessedFileList=facebookFriendsPhotoList.get(0).getProcessedFiles();
+                if(facebookFriendsProcessedFileList!=null){
+                    String userImage=facebookFriendsProcessedFileList.get(0).getUrl();
+                    Glide.with(context).load(userImage)
+                            .thumbnail(0.5f)
+                            .crossFade()
+                            .placeholder(R.mipmap.app_icon)
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .into(viewHolder.profileImage);
+                }
+            }
+            viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    facebookFriendsActivity.clickFacebookFriends(facebookFriendsResultList.get(position).getUserId());
+                }
+            });
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+
     }
 
     @Override
@@ -51,10 +81,12 @@ public class FacebookFriendsAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             super(itemView);
             this.itemView = itemView;
             facebookUserName = (TextView) itemView.findViewById(R.id.facebookUserName);
+            profileImage = (ImageView) itemView.findViewById(R.id.profileImage);
 
         }
         View itemView;
         TextView facebookUserName;
+        ImageView profileImage;
 
     }
 }
