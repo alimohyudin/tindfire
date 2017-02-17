@@ -44,6 +44,9 @@ public class Constants {
     public static final String LIKE_TITLE="Like";
     public static final String SUPERLIKE_TITLE="Superlike";
     public static final String PROFILE_ID="ProfileId";
+    public static final String MEN="men";
+    public static final String WOMEN="women";
+
 
 
 }

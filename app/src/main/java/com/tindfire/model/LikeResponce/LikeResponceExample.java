@@ -9,6 +9,8 @@ public class LikeResponceExample {
     int likesRemaining;
      boolean isLike;
 
+
+
     public boolean isLike() {
         return isLike;
     }

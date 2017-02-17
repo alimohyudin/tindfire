@@ -122,6 +122,41 @@ public class PreferenceManager {
         return sharedPreferences.getString(PreferenceConstant.BUTTON_RADIO,"");
     }
 
+    /**
+     *
+     * @param buttonRadioFacebook
+     */
+    public void setButtonRadioFacebook(String buttonRadioFacebook){
+        editor.putString(PreferenceConstant.BUTTON_RADIO_FACEBOOK,buttonRadioFacebook);
+        editor.commit();
+    }
+    public String getButtonRadioFacebook(){
+        return sharedPreferences.getString(PreferenceConstant.BUTTON_RADIO_FACEBOOK,"");
+    }
+    /**
+     *
+     * @param superlike
+     */
+    public void setSuperlike(String superlike){
+        editor.putString(PreferenceConstant.SUPERLIKE,superlike);
+        editor.commit();
+    }
+    public String getSuperLike(){
+        return sharedPreferences.getString(PreferenceConstant.SUPERLIKE,"");
+    }
+
+    /**
+     *
+     * @param like
+     */
+    public void setlike(String like){
+        editor.putString(PreferenceConstant.LIKE,like);
+        editor.commit();
+    }
+    public String getLike(){
+        return sharedPreferences.getString(PreferenceConstant.LIKE,"");
+    }
+
 
 
 }

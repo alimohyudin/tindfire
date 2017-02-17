@@ -27,6 +27,7 @@ public class ActivtiySetting extends AppCompatActivity {
     private ImageView mSideBar;
     private RadioButton distanceInKm;
     private RadioButton distanceInMiles;
+    private RadioButton menRadioButton,womenRadioButton;
 
     private PreferenceManager mPref;
     @Override
@@ -63,12 +64,22 @@ public class ActivtiySetting extends AppCompatActivity {
         titleView.setText(getResources().getText(R.string.setting));
         distanceInKm=(RadioButton)findViewById(R.id.distanceInKm);
         distanceInMiles=(RadioButton)findViewById(R.id.distanceInMiles);
+        menRadioButton=(RadioButton)findViewById(R.id.men_radioButton);
+        womenRadioButton=(RadioButton)findViewById(R.id.women_radioButton);
         if(mPref.getButtonRadio().equalsIgnoreCase(Constants.DISTANCE_MILES)){
             distanceInKm.setChecked(false);
             distanceInMiles.setChecked(true);
         }else {
             distanceInKm.setChecked(true);
             distanceInMiles.setChecked(false);
+        }
+
+        if(mPref.getButtonRadioFacebook().equalsIgnoreCase(Constants.WOMEN)){
+            womenRadioButton.setChecked(true);
+            menRadioButton.setChecked(false);
+        }else{
+            menRadioButton.setChecked(true);
+            womenRadioButton.setChecked(false);
         }
     }
     private void clickListner() {
@@ -87,6 +98,23 @@ public class ActivtiySetting extends AppCompatActivity {
                 distanceInMiles.setChecked(true);
                 distanceInKm.setChecked(false);
                 mPref.setButtonRadio(Constants.DISTANCE_MILES);
+            }
+        });
+        menRadioButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                menRadioButton.setChecked(true);
+                womenRadioButton.setChecked(false);
+                mPref.setButtonRadioFacebook(Constants.MEN);
+            }
+        });
+
+        womenRadioButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                womenRadioButton.setChecked(true);
+                menRadioButton.setChecked(false);
+                mPref.setButtonRadioFacebook(Constants.WOMEN);
             }
         });
 

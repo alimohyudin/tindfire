@@ -19,6 +19,16 @@ public class SuperLikeExample {
     @Expose
     private SuperLikes superLikes;
 
+
+
+
+
+
+
+
+
+
+
     public Boolean getMatch() {
         return match;
     }

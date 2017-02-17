@@ -15,6 +15,10 @@ public class FacebookFriendsProfileExample {
     @Expose
     private FacebookFriendsProfileResults results;
 
+
+
+
+
     public Integer getStatus() {
         return status;
     }

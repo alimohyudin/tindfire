@@ -12,5 +12,8 @@ public class PreferenceConstant {
     public static final String EMAILID="emailId";
     public static final String SOCIALID="socialId";
     public static final String BUTTON_RADIO="buttonRadio";
+    public static final String BUTTON_RADIO_FACEBOOK="button_radio_facebook";
+    public static final String SUPERLIKE="superlike";
+    public static final String LIKE="like";
 
 }
