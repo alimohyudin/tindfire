@@ -105,7 +105,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         model.setSelected(!model.isSelected());
                         viewHolder.likeIvs.setImageResource(model.isSelected() ? R.mipmap.like_colors : R.mipmap.like);
                         if(model.isSelected()){
-                            activityMain.selectedLike(model.getId(),position,model.getName(),model.getPhotos().get(position).getUrl());
+                            activityMain.selectedLike(model.getId(),position,model.getName(),recomondationnPhotoList.get(0).getUrl());
                             recomondationRejected.add(model.getId());
 
                             Log.d("ANdroid :","recomondationRejected ::" +recomondationRejected.size());
@@ -156,7 +156,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         model.setSuperLikeSelected(!model.isSuperLikeSelected());
                         viewHolder.superLikeIv.setImageResource(model.isSuperLikeSelected() ? R.mipmap.superlike : R.mipmap.superlike_deactive);
                         if(model.isSuperLikeSelected()){
-                            activityMain.selectedSuperLike(model.getId(),position,model.getName(),model.getPhotos().get(position).getUrl());
+                            activityMain.selectedSuperLike(model.getId(),position,model.getName(),recomondationnPhotoList.get(0).getUrl());
 //                           recomondationRejected.add(model.getId());
                             Log.d("ANdroid :","recomondationRejected ::" +recomondationRejected.size());
                         }else{
