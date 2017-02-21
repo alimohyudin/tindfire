@@ -46,6 +46,8 @@ public class Constants {
     public static final String PROFILE_ID="ProfileId";
     public static final String MEN="men";
     public static final String WOMEN="women";
+    public static final String Like_of_="Like_of_";
+    public static final String SUPER_Like_of_="SuperLike_of_";
 
 
 

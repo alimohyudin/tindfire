@@ -32,10 +32,15 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.dinuscxj.refresh.RecyclerRefreshLayout;
 import com.facebook.login.LoginManager;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.tindfire.R;
 import com.tindfire.adapter.CategoryAdapter;
 import com.tindfire.apiClient.TinderAPiClient;
 import com.tindfire.apiClient.TinderAPiInterface;
+import com.tindfire.firebase.FirebaseLike;
 import com.tindfire.model.LikeResponce.LikeResponceExample;
 import com.tindfire.model.PassModel.PassData;
 import com.tindfire.model.RecomondationModel.RecomondationResponce;
@@ -103,8 +108,10 @@ public class ActivityMain extends AppCompatActivity {
     private ImageView mTwitterLinkUv, mFacebookLinkIv;
     private LinearLayout mSettingLL;
     private LinearLayout mMessageLL;
-//    private FirebaseDatabase mFirebaseInstance;
-//    private DatabaseReference mFirebaseDatabase;
+    private DatabaseReference databaseReference;
+    private FirebaseUser firebaseUser;
+    private FirebaseAuth firebaseAuth;
+    private LinearLayout mSuperLikeMe;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -116,25 +123,13 @@ public class ActivityMain extends AppCompatActivity {
         ButterKnife.bind(this);
         setActionBar();
         init();
-//        mFirebaseInstance=FirebaseDatabase.getInstance();
-//        //get Reference to "AlreadyLikeUser node"
-//        mFirebaseDatabase=mFirebaseInstance.getReference("AlreadyLikeUser");
-//        //Store apptitle to "app_title" node
-//        mFirebaseInstance.getReference("app_title").setValue("TinderFire Like");
-//        mFirebaseInstance.getReference("app_title").addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                Log.e(TAG, "App title updated");
-//
-//                String appTitle = dataSnapshot.getValue(String.class);
-//                Log.d("Android :","apptitle :"+appTitle);
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        });
+        firebaseAuth=FirebaseAuth.getInstance();
+        if(firebaseAuth.getCurrentUser()!=null){
+            databaseReference= FirebaseDatabase.getInstance().getReference();
+            firebaseUser=firebaseAuth.getCurrentUser();
+            Log.d("Android :","firebasseuser.getuid " +firebaseUser.getUid());
+            Log.d("Android :","firebasseuser.getEmail: " +firebaseUser.getEmail());
+        }
         clickListner();
         if (Utility.isConnectingToInternet(context)) {
             hitGetRecsApi();
@@ -176,9 +171,11 @@ public class ActivityMain extends AppCompatActivity {
 
     }
 
-    public void selectedLike(String id, int position) {
+    public void selectedLike(String id, int position,String username ,String imageUrl) {
         if (Utility.isConnectingToInternet(context)) {
-            hitLikeAPi(id, position);
+            hitLikeAPi(id, position,username,imageUrl);
+
+
 //            recomondationResultList.get(position).setLike(true);
 //            createUser(id);
         } else {
@@ -186,6 +183,16 @@ public class ActivityMain extends AppCompatActivity {
         }
 
     }
+
+    private void saveDataInFireBase(String id, String username, String imageUrl) {
+            Log.d("Android :" ,"firebaseUser.getUid() :" +firebaseUser.getUid());
+           databaseReference.child(Constants.Like_of_+firebaseUser.getUid()).child(id).setValue(new FirebaseLike(id,username,imageUrl));
+    }
+    private void saveDataSuperLikeInFireBase(String id, String username, String imageUrl) {
+        Log.d("Android :" ,"firebaseUser.getUid() :" +firebaseUser.getUid());
+        databaseReference.child(Constants.SUPER_Like_of_+firebaseUser.getUid()).child(id).setValue(new FirebaseLike(id,username,imageUrl));
+    }
+
 
 //    private void createUser(String id) {
 //        AlreadyLikeUser alreadyLikeUser = new AlreadyLikeUser();
@@ -210,10 +217,10 @@ public class ActivityMain extends AppCompatActivity {
 
 
     }
-    public void selectedSuperLike(String id, int position) {
+    public void selectedSuperLike(String id, int position,String username ,String imageUrl) {
 
         if (Utility.isConnectingToInternet(context)) {
-            hitSuperLikeAPi(id, position);
+            hitSuperLikeAPi(id, position,username,imageUrl);
 //            recomondationResultList.get(position).setSuperlike(true);
 
         } else {
@@ -294,6 +301,7 @@ public class ActivityMain extends AppCompatActivity {
         mLogoutIv = (ImageView) findViewById(R.id.logoutIv);
         mLogoutLL = (LinearLayout) findViewById(R.id.logoutLL);
         mAlreadyLikedMe = (LinearLayout) findViewById(R.id.already_liked_me);
+        mSuperLikeMe = (LinearLayout) findViewById(R.id.already_super_liked_me);
         mFacebookFriends = (LinearLayout) findViewById(R.id.facebook_frndLL);
         mSettingLL = (LinearLayout) findViewById(R.id.settingLL);
         mMessageLL = (LinearLayout) findViewById(R.id.messagee_ll);
@@ -427,7 +435,7 @@ public class ActivityMain extends AppCompatActivity {
 
     }
 
-    private void hitLikeAPi(String id, final int i) {
+    private void hitLikeAPi(final String id, final int i,final String userName,final String imageUrl) {
         progress_bar.setVisibility(View.VISIBLE);
 
         TinderAPiInterface tinderAPiInterface = TinderAPiClient.getCLient().create(TinderAPiInterface.class);
@@ -441,9 +449,9 @@ public class ActivityMain extends AppCompatActivity {
                     Log.d("ANdroid :", "ActivityProfile :" + response.body().toString());
 
                     if (response.body().match() == Constants.MATCH_FALCE) {
+                        saveDataInFireBase(id,userName,imageUrl);
                         recomondationResultList.remove(i);
                         categoryAdapter.notifyDataSetChanged();
-
 
                     } else {
                     }
@@ -460,7 +468,7 @@ public class ActivityMain extends AppCompatActivity {
 
     }
 
-    private void hitSuperLikeAPi(String id, final int i){
+    private void hitSuperLikeAPi(final String id, final int i,final String userName,final String imageUrl){
         progress_bar.setVisibility(View.VISIBLE);
         TinderAPiInterface tinderAPiInterface=TinderAPiClient.getCLient().create(TinderAPiInterface.class);
         Call<SuperLikeExample> superLikeExampleCall = tinderAPiInterface.getSuperLikeExampleCall(mPref.getToken(), id);
@@ -472,6 +480,7 @@ public class ActivityMain extends AppCompatActivity {
                 try {
                     Log.d("ANdroid :", "ActivityProfile :" + response.body().toString());
                     if(response.body().getStatus()==200){
+                        saveDataSuperLikeInFireBase(id,userName,imageUrl);
                         recomondationResultList.remove(i);
                         categoryAdapter.notifyDataSetChanged();
                     }
@@ -630,6 +639,12 @@ public class ActivityMain extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
+            }
+        });
+        mSuperLikeMe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ActivityMain.this, AlreadySuperLikedMe.class));
             }
         });
         mMatchll.setOnClickListener(new View.OnClickListener() {

@@ -24,7 +24,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.tindfire.R;
-import com.tindfire.adapter.AlreadyLikeAdapter;
+import com.tindfire.adapter.AlreadySuperLikeAdapter;
 import com.tindfire.firebase.FirebaseLike;
 import com.tindfire.util.Constants;
 import com.tindfire.util.Utility;
@@ -36,8 +36,8 @@ import java.util.List;
  * Created by vcareall on 7/1/17.
  */
 
-public class AlreadyLikedMe extends AppCompatActivity {
-    private static final String TAG=AlreadyLikedMe.class.getSimpleName();
+public class AlreadySuperLikedMe extends AppCompatActivity {
+    private static final String TAG=AlreadySuperLikedMe.class.getSimpleName();
     private Context context;
     private View headerLayout;
     private Toolbar toolbar;
@@ -50,12 +50,12 @@ public class AlreadyLikedMe extends AppCompatActivity {
     DatabaseReference databaseReference;
     public FirebaseUser firebaseUser;
     public  FirebaseAuth firebaseAuth;
-    private AlreadyLikeAdapter alreadyLikeAdapter;
+    private AlreadySuperLikeAdapter alreadyLikeAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_already_likedme);
+        setContentView(R.layout.activity_already_super_likedme);
         context=this;
         setActionBar();
         init();
@@ -110,7 +110,7 @@ public class AlreadyLikedMe extends AppCompatActivity {
         progressDialog.setCancelable(false);
         progressDialog.show();
 
-        databaseReference.child(Constants.Like_of_+firebaseUser.getUid()).addValueEventListener(new ValueEventListener() {
+        databaseReference.child(Constants.SUPER_Like_of_+firebaseUser.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 progressDialog.dismiss();
@@ -128,7 +128,7 @@ public class AlreadyLikedMe extends AppCompatActivity {
                         Log.d(TAG,"firebaseLikeList size :" +firebaseLikeList.size());
                         RecyclerView.LayoutManager layoutManager=new GridLayoutManager(getApplicationContext(),2);
                         alreadyLikedRLView.setLayoutManager(layoutManager);
-                        alreadyLikeAdapter = new AlreadyLikeAdapter(AlreadyLikedMe.this,context,firebaseLikeList);
+                        alreadyLikeAdapter = new AlreadySuperLikeAdapter(AlreadySuperLikedMe.this,context,firebaseLikeList);
                         alreadyLikedRLView.setAdapter(alreadyLikeAdapter);
 
                     }else{

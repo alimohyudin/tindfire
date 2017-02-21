@@ -16,13 +16,14 @@
     <string name="logout">Logout</string>
     <string name="profile">Profile</string>
     <string name="alreaady_liked_me">Already Liked Me</string>
+    <string name="superlike">Superlike</string>
     <string name="match">Match</string>
     <string name="facebook_friends">Facebook Friends</string>
     <string name="message">Message</string>
     <string name="add_cooming_soon">Coming Soon</string>
     <string name="cooming_soon">Coming Soon</string>
     <!--<string name="facebook_app_id">747490872120685</string>-->
-    <string name="facebook_app_id">464891386855067</string>
+    <string name="facebook_app_id"><!--747490872120685-->464891386855067</string>
     <string name="men">Men</string>
     <string name="women">Women</string>
     <string name="show_me_facebook_friends">Show Me Facebook Friends</string>

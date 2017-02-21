@@ -23,9 +23,14 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.tindfire.R;
 import com.tindfire.apiClient.TinderAPiClient;
 import com.tindfire.apiClient.TinderAPiInterface;
+import com.tindfire.firebase.FirebaseLike;
 import com.tindfire.model.LikeResponce.LikeResponceExample;
 import com.tindfire.model.LikeResponce.Match;
 import com.tindfire.model.PassModel.PassData;
@@ -87,6 +92,9 @@ public class ActivtiyProfile extends AppCompatActivity {
     private static int NUM_PAGES = 0;
     private static int currentPage = 0;
     private CirclePageIndicator indicator;
+    private FirebaseAuth firebaseAuth;
+    private DatabaseReference databaseReference;
+     FirebaseUser firebaseUser;
 
 
     @Override
@@ -109,6 +117,13 @@ public class ActivtiyProfile extends AppCompatActivity {
             recomondationnPosition= bundle.getInt(Constants.RECOM_POSITION);
             recomondationnLike= bundle.getBoolean(Constants.RECOM_LIKE);
             Log.d("Android:"," onrecomondationnLike:" +recomondationnLike);
+        }
+        firebaseAuth= FirebaseAuth.getInstance();
+        if(firebaseAuth.getCurrentUser()!=null){
+            databaseReference= FirebaseDatabase.getInstance().getReference();
+            firebaseUser=firebaseAuth.getCurrentUser();
+            Log.d("Android :","firebasseuser.getuid " +firebaseUser.getUid());
+            Log.d("Android :","firebasseuser.getEmail: " +firebaseUser.getEmail());
         }
 
         init();
@@ -298,6 +313,8 @@ public class ActivtiyProfile extends AppCompatActivity {
                 try {
                     Log.d("ANdroid :", "ActivityProfile :" + response.body().toString());
                     if(response.body().getStatus()==200){
+                        saveDataSuperLikeInFireBase(recomondationnID,recomondationnName,recomondationnPhotoList.get(0).getUrl());
+
                         categoryAdapter.removePositonFromProfile(recomondationnPosition);
                         finish();
                     }
@@ -311,6 +328,10 @@ public class ActivtiyProfile extends AppCompatActivity {
                 progressDialog.dismiss();
             }
         });
+    }
+    private void saveDataSuperLikeInFireBase(String id, String username, String imageUrl) {
+        Log.d("Android :" ,"firebaseUser.getUid() :" +firebaseUser.getUid());
+        databaseReference.child(Constants.SUPER_Like_of_+firebaseUser.getUid()).child(id).setValue(new FirebaseLike(id,username,imageUrl));
     }
     private void hitPassAPi() {
         progressDialog=new ProgressDialog(context);
@@ -375,6 +396,7 @@ public class ActivtiyProfile extends AppCompatActivity {
 //                        likeUser.setImageResource(R.mipmap.profile_like_btn);
 //                        recomondationnLike=true;
 //                        categoryAdapter.likeProfile(recomondationnPosition);
+                        saveDataInFireBase(recomondationnID,recomondationnName,recomondationnPhotoList.get(0).getUrl());
                         categoryAdapter.removePositonFromProfile(recomondationnPosition);
                         finish();
 
@@ -392,7 +414,10 @@ public class ActivtiyProfile extends AppCompatActivity {
         });
 
     }
-
+    private void saveDataInFireBase(String id, String username, String imageUrl) {
+        Log.d("Android :" ,"firebaseUser.getUid() :" +firebaseUser.getUid());
+        databaseReference.child(Constants.Like_of_+firebaseUser.getUid()).child(id).setValue(new FirebaseLike(id,username,imageUrl));
+    }
     public void setActionBar(){
         headerLayout= LayoutInflater.from(context).inflate(R.layout.action_bar,null);
         toolbar=(Toolbar)findViewById(R.id.toolBar);

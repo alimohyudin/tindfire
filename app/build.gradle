@@ -14,7 +14,7 @@ repositories {
     maven { url 'https://maven.fabric.io/public' }
 }
 
-apply plugin: 'com.neenbedankt.android-apt'
+//apply plugin: 'com.neenbedankt.android-apt'
 
 android {
     compileSdkVersion 23
@@ -45,27 +45,34 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.4.0'
     compile 'com.android.support:design:23.3.0'
     compile 'com.android.support:recyclerview-v7:23.3.0'
+
+    //Firebase
+    compile 'com.google.firebase:firebase-auth:10.0.1'
+    compile  'com.google.firebase:firebase-database:10.0.1'
+
     // Butterknife
     compile 'com.jakewharton:butterknife:7.0.1'
     // Facebook SDK
     compile 'com.facebook.android:facebook-android-sdk:4.10.0'
     //    Dagger 2
-    compile 'com.google.dagger:dagger:2.0.1'
-    apt 'com.google.dagger:dagger-compiler:2.0.1'
-    compile 'org.glassfish.main:javax.annotation:4.0-b33'
+//    compile 'com.google.dagger:dagger:2.0.1'
+//    apt 'com.google.dagger:dagger-compiler:2.0.1'
+//    compile 'org.glassfish.main:javax.annotation:4.0-b33'
     //    Retrofit
     compile 'com.squareup.retrofit2:retrofit:2.0.2'
     compile 'com.squareup.retrofit2:converter-gson:2.0.2'
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.afollestad.material-dialogs:core:0.9.1.0'
     compile 'com.dinuscxj:recyclerrefreshlayout:2.0.3'
-    compile 'com.google.android.gms:play-services-analytics:8.1.0'
-    compile 'com.google.android.gms:play-services:8.1.0'
-    //compile 'com.google.firebase:firebase-database:9.6.1'
+    compile 'com.google.android.gms:play-services-analytics:10.0.1'
+    compile 'com.google.android.gms:play-services:10.0.1'
     compile project(':libs:ViewPagerIndicator-Library')
     compile('com.crashlytics.sdk.android:crashlytics:2.6.5@aar') {
         transitive = true;
     }
+
+    compile 'com.android.support:multidex:1.0.0'
+
 
 }
 apply plugin: 'com.google.gms.google-services'

@@ -4,22 +4,25 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ImageView;
 
-import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
-import com.facebook.HttpMethod;
 import com.facebook.login.LoginBehavior;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 import com.tindfire.R;
 import com.tindfire.apiClient.TinderAPiClient;
 import com.tindfire.apiClient.TinderAPiInterface;
@@ -56,6 +59,7 @@ public class LoginActivity extends AppCompatActivity {
     private PreferenceManager mPref;
     private String facebooId="";
     private ProgressDialog progressDialog;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,6 +69,7 @@ public class LoginActivity extends AppCompatActivity {
         context=this;
         ButterKnife.bind(this);
         callbackManager = CallbackManager.Factory.create();
+        mAuth= FirebaseAuth.getInstance();
         mPref=PreferenceManager.getInstatnce(context);
     }
     @OnClick(R.id.fb_button) void fbButtonClick(){
@@ -96,8 +101,10 @@ public class LoginActivity extends AppCompatActivity {
                                     mPref.setUserName(mFbName);
                                     mPref.setEmailid(fbmEmail);
                                     mPref.setSocialId(socialUniqueId);
+
                                     if(!socialUniqueId.equalsIgnoreCase("")){
                                         if(Utility.isConnectingToInternet(context)){
+                                            handleFacebookAccessToken(fbmEmail,facebooId);
                                             hitAuthApi(fbToken,socialUniqueId);
                                         }else{
                                             Utility.showMessage(context, Constants.NO_INTERNET_CONNECTION);
@@ -189,6 +196,40 @@ public class LoginActivity extends AppCompatActivity {
 
 
 
+    }
+    private void handleFacebookAccessToken(final String fbmEmail, final String facebookIdPassword) {
+//        Log.d("", "handleFacebookAccessToken:" + token);
+        mAuth.createUserWithEmailAndPassword(fbmEmail,facebookIdPassword)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if(task.isSuccessful()){
+//                            Toast.makeText(LoginActivity.this, "Registration Successfully", Toast.LENGTH_SHORT).show();
+                        }else{
+//                            Toast.makeText(LoginActivity.this, "Could not Registration ", Toast.LENGTH_SHORT).show();
+                            loginWithFriebase(fbmEmail, facebookIdPassword);
+                        }
+
+                    }
+                });
+
+
+    }
+
+    private void loginWithFriebase(String fbmEmail, String facebookIdPassword) {
+        mAuth.signInWithEmailAndPassword(fbmEmail,facebookIdPassword)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        progressDialog.dismiss();
+                        if(task.isSuccessful()){
+
+                        }else{
+
+                        }
+
+                    }
+                });
     }
 
     @Override
