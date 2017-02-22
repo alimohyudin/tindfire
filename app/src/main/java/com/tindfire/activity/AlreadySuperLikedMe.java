@@ -2,6 +2,7 @@ package com.tindfire.activity;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
@@ -96,7 +97,7 @@ public class AlreadySuperLikedMe extends AppCompatActivity {
         mSideBar=(ImageView)toolbar.findViewById(R.id.side_bar);
         mSideBar.setVisibility(View.INVISIBLE);
         titleView=(TextView)toolbar.findViewById(R.id.titleView);
-        titleView.setText(getResources().getText(R.string.alreaady_liked_me));
+        titleView.setText(getResources().getText(R.string.superlike));
         addRelativeLayout=(RelativeLayout)findViewById(R.id.addRelative);
         addRelativeLayout.addView(MyAdmovAds.loadAdmodAd(context));
         alreadyLikedRLView=(RecyclerView)findViewById(R.id.already_liked_RLView);
@@ -150,4 +151,9 @@ public class AlreadySuperLikedMe extends AppCompatActivity {
 
     }
 
+    public void setSuperLikeMe(String userID) {
+        Intent intent=new Intent(AlreadySuperLikedMe.this,AlreadySuperlikeMeProfileActivity.class);
+        intent.putExtra(Constants.PROFILE_ID,userID);
+        startActivity(intent);
+    }
 }

@@ -61,13 +61,12 @@ public class AlreadySuperLikeAdapter extends RecyclerView.Adapter<RecyclerView.V
             if(firebaseLikeList.get(position).getUserName().length()>0){
                 viewHolder.userName.setText(firebaseLikeList.get(position).getUserName());
             }
-//            viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    activityMatch.setMatch(position,getMatchPhotoList,getMatchPerson.getName(),
-//                            getMatchPerson.getBio(),getMatchPerson.getPingTime(),getMatchPerson.getBirthDate());
-//                }
-//            });
+            viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    alreadySuperLikedMe.setSuperLikeMe(firebaseLikeList.get(position).getUserID());
+                }
+            });
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -86,6 +85,7 @@ public class AlreadySuperLikeAdapter extends RecyclerView.Adapter<RecyclerView.V
             userName = (TextView) itemView.findViewById(R.id.userName);
             userBt = (ImageView) itemView.findViewById(R.id.likeIV);
             userImage = (ImageView) itemView.findViewById(R.id.userNmage);
+            userBt.setImageResource(R.mipmap.superlike);
         }
         View itemView;
         TextView userName;

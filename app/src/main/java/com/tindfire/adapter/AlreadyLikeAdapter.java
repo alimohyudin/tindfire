@@ -61,13 +61,12 @@ public class AlreadyLikeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             if(firebaseLikeList.get(position).getUserName().length()>0){
                 viewHolder.userName.setText(firebaseLikeList.get(position).getUserName());
             }
-//            viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    activityMatch.setMatch(position,getMatchPhotoList,getMatchPerson.getName(),
-//                            getMatchPerson.getBio(),getMatchPerson.getPingTime(),getMatchPerson.getBirthDate());
-//                }
-//            });
+            viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    alreadyLikedMe.setlikeProfile(firebaseLikeList.get(position).getUserID());
+                }
+            });
         }catch (Exception e){
             e.printStackTrace();
         }

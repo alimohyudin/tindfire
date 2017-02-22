@@ -2,6 +2,7 @@ package com.tindfire.activity;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
@@ -150,4 +151,9 @@ public class AlreadyLikedMe extends AppCompatActivity {
 
     }
 
+    public void setlikeProfile(String userID) {
+        Intent intent=new Intent(AlreadyLikedMe.this,AlreadyLikedMeProfileActivity.class);
+        intent.putExtra(Constants.PROFILE_ID,userID);
+        startActivity(intent);
+    }
 }
