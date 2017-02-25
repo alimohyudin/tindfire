@@ -16,7 +16,8 @@
     <string name="logout">Logout</string>
     <string name="profile">Profile</string>
     <string name="alreaady_liked_me">Already Liked Me</string>
-    <string name="superlike">Superlike</string>
+    <string name="superlike">Superliked</string>
+    <string name="history">History</string>
     <string name="match">Match</string>
     <string name="facebook_friends">Facebook Friends</string>
     <string name="message">Message</string>
@@ -26,5 +27,6 @@
     <string name="facebook_app_id"><!--747490872120685-->464891386855067</string>
     <string name="men">Men</string>
     <string name="women">Women</string>
+    <string name="liked">Liked</string>
     <string name="show_me_facebook_friends">Show Me Facebook Friends</string>
 </resources>

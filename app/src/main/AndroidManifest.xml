@@ -50,14 +50,13 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"/>
 
-        <activity android:name=".activity.AlreadySuperLikedMe"
+        <activity android:name=".activity.LikedMeProfileActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"/>
-
-        <activity android:name=".activity.AlreadyLikedMeProfileActivity"
+        <activity android:name=".activity.SuperlikeMeProfileActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".activity.AlreadySuperlikeMeProfileActivity"
+        <activity android:name=".activity.HistoryActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"/>
 

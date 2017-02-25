@@ -42,8 +42,8 @@ import retrofit2.Response;
  * Created by vcareall on 16/2/17.
  */
 
-public class AlreadySuperlikeMeProfileActivity extends AppCompatActivity {
-    private static final String TAG=AlreadySuperlikeMeProfileActivity.class.getSimpleName();
+public class SuperlikeMeProfileActivity extends AppCompatActivity {
+    private static final String TAG=SuperlikeMeProfileActivity.class.getSimpleName();
     private Context context;
     private View headerLayout;
     private Toolbar toolbar;

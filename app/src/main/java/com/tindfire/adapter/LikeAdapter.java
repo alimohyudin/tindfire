@@ -12,22 +12,22 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.tindfire.R;
-import com.tindfire.activity.AlreadySuperLikedMe;
 import com.tindfire.firebase.FirebaseLike;
+import com.tindfire.fragment.LikedFragment;
 
 import java.util.List;
 
 /**
  * Created by vcareall on 7/12/16.
  */
-public class AlreadySuperLikeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private final AlreadySuperLikedMe alreadySuperLikedMe;
+public class LikeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private final LikedFragment likedFragment;
     private final Context context;
     private final List<FirebaseLike> firebaseLikeList;
 
 
-    public AlreadySuperLikeAdapter(AlreadySuperLikedMe alreadySuperLikedMe, Context context, List<FirebaseLike>firebaseLikeList) {
-        this.alreadySuperLikedMe=alreadySuperLikedMe;
+    public LikeAdapter(LikedFragment likedFragment, Context context, List<FirebaseLike>firebaseLikeList) {
+        this.likedFragment=likedFragment;
         this.context=context;
         this.firebaseLikeList=firebaseLikeList;
     }
@@ -35,13 +35,13 @@ public class AlreadySuperLikeAdapter extends RecyclerView.Adapter<RecyclerView.V
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.row_activity_match_item,null);
-        RecyclerView.ViewHolder holder = new AlreadySuperLikeHolder(view);
+        RecyclerView.ViewHolder holder = new AlreadyLikeAdapterHolder(view);
         return holder;
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
-        final AlreadySuperLikeHolder viewHolder = (AlreadySuperLikeHolder) holder;
+        final AlreadyLikeAdapterHolder viewHolder = (AlreadyLikeAdapterHolder) holder;
 
         try{
                 String userImage=firebaseLikeList.get(position).getImageUrl();
@@ -64,7 +64,7 @@ public class AlreadySuperLikeAdapter extends RecyclerView.Adapter<RecyclerView.V
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    alreadySuperLikedMe.setSuperLikeMe(firebaseLikeList.get(position).getUserID());
+                    likedFragment.setlikeProfile(firebaseLikeList.get(position).getUserID());
                 }
             });
         }catch (Exception e){
@@ -77,15 +77,14 @@ public class AlreadySuperLikeAdapter extends RecyclerView.Adapter<RecyclerView.V
     public int getItemCount() {
         return firebaseLikeList.size();
     }
-    class AlreadySuperLikeHolder extends RecyclerView.ViewHolder{
+    class AlreadyLikeAdapterHolder extends RecyclerView.ViewHolder{
 
-        public AlreadySuperLikeHolder(View itemView) {
+        public AlreadyLikeAdapterHolder(View itemView) {
             super(itemView);
             this.itemView = itemView;
             userName = (TextView) itemView.findViewById(R.id.userName);
             userBt = (ImageView) itemView.findViewById(R.id.likeIV);
             userImage = (ImageView) itemView.findViewById(R.id.userNmage);
-            userBt.setImageResource(R.mipmap.superlike);
         }
         View itemView;
         TextView userName;

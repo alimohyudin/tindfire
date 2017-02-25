@@ -1,27 +1,27 @@
 {
   "project_info": {
-    "project_number": "694428606442",
-    "firebase_url": "https://tinderfire-bde72.firebaseio.com",
-    "project_id": "tinderfire-bde72",
-    "storage_bucket": "tinderfire-bde72.appspot.com"
+    "project_number": "900084592481",
+    "firebase_url": "https://tindr-fire.firebaseio.com",
+    "project_id": "tindr-fire",
+    "storage_bucket": "tindr-fire.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:694428606442:android:3882c8908e4ae7b4",
+        "mobilesdk_app_id": "1:900084592481:android:3882c8908e4ae7b4",
         "android_client_info": {
           "package_name": "com.tindfire"
         }
       },
       "oauth_client": [
         {
-          "client_id": "694428606442-8rs8h31c0o6devfrsklou58fib8ks76p.apps.googleusercontent.com",
+          "client_id": "900084592481-ch51dcj0sca04oqjieehgf33sfatlm15.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBPllceDJR4E0N0NvkZlf0fNfCKaudynI4"
+          "current_key": "AIzaSyCzPmRl_3zTaMaVY7kb0AzdmfMWN-JDW7Y"
         }
       ],
       "services": {

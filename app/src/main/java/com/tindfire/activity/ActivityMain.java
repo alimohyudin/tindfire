@@ -111,7 +111,7 @@ public class ActivityMain extends AppCompatActivity {
     private DatabaseReference databaseReference;
     private FirebaseUser firebaseUser;
     private FirebaseAuth firebaseAuth;
-    private LinearLayout mSuperLikeMe;
+    private LinearLayout mHistory;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -186,11 +186,11 @@ public class ActivityMain extends AppCompatActivity {
 
     private void saveDataInFireBase(String id, String username, String imageUrl) {
             Log.d("Android :" ,"firebaseUser.getUid() :" +firebaseUser.getUid());
-           databaseReference.child(Constants.Like_of_+firebaseUser.getUid()).child(id).setValue(new FirebaseLike(id,username,imageUrl));
+           databaseReference.child(firebaseUser.getUid()).child(Constants.Like_of_+firebaseUser.getUid()).child(id).setValue(new FirebaseLike(id,username,imageUrl));
     }
     private void saveDataSuperLikeInFireBase(String id, String username, String imageUrl) {
         Log.d("Android :" ,"firebaseUser.getUid() :" +firebaseUser.getUid());
-        databaseReference.child(Constants.SUPER_Like_of_+firebaseUser.getUid()).child(id).setValue(new FirebaseLike(id,username,imageUrl));
+        databaseReference.child(firebaseUser.getUid()).child(Constants.SUPER_Like_of_+firebaseUser.getUid()).child(id).setValue(new FirebaseLike(id,username,imageUrl));
     }
 
 
@@ -301,7 +301,6 @@ public class ActivityMain extends AppCompatActivity {
         mLogoutIv = (ImageView) findViewById(R.id.logoutIv);
         mLogoutLL = (LinearLayout) findViewById(R.id.logoutLL);
         mAlreadyLikedMe = (LinearLayout) findViewById(R.id.already_liked_me);
-        mSuperLikeMe = (LinearLayout) findViewById(R.id.already_super_liked_me);
         mFacebookFriends = (LinearLayout) findViewById(R.id.facebook_frndLL);
         mSettingLL = (LinearLayout) findViewById(R.id.settingLL);
         mMessageLL = (LinearLayout) findViewById(R.id.messagee_ll);
@@ -311,6 +310,8 @@ public class ActivityMain extends AppCompatActivity {
         mFacebookLinkIv = (ImageView) findViewById(R.id.facebookLink);
         mTwitterLinkUv = (ImageView) findViewById(R.id.twitterLink);
         mMatchll = (LinearLayout) findViewById(R.id.matchll);
+        mHistory = (LinearLayout) findViewById(R.id.history);
+
         if (!mPref.getUserName().equalsIgnoreCase("")) {
             mUserNameTv.setText(mPref.getUserName());
         } else {
@@ -619,6 +620,12 @@ public class ActivityMain extends AppCompatActivity {
                 startActivity(new Intent(ActivityMain.this, AlreadyLikedMe.class));
             }
         });
+        mHistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ActivityMain.this, HistoryActivity.class));
+            }
+        });
         mLogoutIv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -639,12 +646,6 @@ public class ActivityMain extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-            }
-        });
-        mSuperLikeMe.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(ActivityMain.this, AlreadySuperLikedMe.class));
             }
         });
         mMatchll.setOnClickListener(new View.OnClickListener() {

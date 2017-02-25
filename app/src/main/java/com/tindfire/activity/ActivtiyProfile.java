@@ -331,7 +331,7 @@ public class ActivtiyProfile extends AppCompatActivity {
     }
     private void saveDataSuperLikeInFireBase(String id, String username, String imageUrl) {
         Log.d("Android :" ,"firebaseUser.getUid() :" +firebaseUser.getUid());
-        databaseReference.child(Constants.SUPER_Like_of_+firebaseUser.getUid()).child(id).setValue(new FirebaseLike(id,username,imageUrl));
+        databaseReference.child(firebaseUser.getUid()).child(Constants.SUPER_Like_of_+firebaseUser.getUid()).child(id).setValue(new FirebaseLike(id,username,imageUrl));
     }
     private void hitPassAPi() {
         progressDialog=new ProgressDialog(context);
@@ -416,7 +416,7 @@ public class ActivtiyProfile extends AppCompatActivity {
     }
     private void saveDataInFireBase(String id, String username, String imageUrl) {
         Log.d("Android :" ,"firebaseUser.getUid() :" +firebaseUser.getUid());
-        databaseReference.child(Constants.Like_of_+firebaseUser.getUid()).child(id).setValue(new FirebaseLike(id,username,imageUrl));
+        databaseReference.child(firebaseUser.getUid()).child(Constants.Like_of_+firebaseUser.getUid()).child(id).setValue(new FirebaseLike(id,username,imageUrl));
     }
     public void setActionBar(){
         headerLayout= LayoutInflater.from(context).inflate(R.layout.action_bar,null);

@@ -42,8 +42,8 @@ import retrofit2.Response;
  * Created by vcareall on 16/2/17.
  */
 
-public class AlreadyLikedMeProfileActivity extends AppCompatActivity {
-    private static final String TAG=AlreadyLikedMeProfileActivity.class.getSimpleName();
+public class LikedMeProfileActivity extends AppCompatActivity {
+    private static final String TAG=LikedMeProfileActivity.class.getSimpleName();
     private Context context;
     private View headerLayout;
     private Toolbar toolbar;
@@ -101,7 +101,7 @@ public class AlreadyLikedMeProfileActivity extends AppCompatActivity {
         mSideBar=(ImageView)toolbar.findViewById(R.id.side_bar);
         mSideBar.setVisibility(View.INVISIBLE);
         titleView=(TextView)toolbar.findViewById(R.id.titleView);
-        titleView.setText(getResources().getText(R.string.alreaady_liked_me));
+        titleView.setText(getResources().getText(R.string.liked));
         viewPager=(ViewPager)findViewById(R.id.ViewPager);
         userProfileName=(TextView)findViewById(R.id.userProfileName);
         userAge=(TextView)findViewById(R.id.userAge);

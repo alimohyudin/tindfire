@@ -1,18 +1,16 @@
-package com.tindfire.activity;
+package com.tindfire.fragment;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -25,7 +23,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.tindfire.R;
-import com.tindfire.adapter.AlreadySuperLikeAdapter;
+import com.tindfire.activity.MyAdmovAds;
+import com.tindfire.activity.SuperlikeMeProfileActivity;
+import com.tindfire.adapter.SuperLikeAdapter;
 import com.tindfire.firebase.FirebaseLike;
 import com.tindfire.util.Constants;
 import com.tindfire.util.Utility;
@@ -33,16 +33,14 @@ import com.tindfire.util.Utility;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.facebook.FacebookSdk.getApplicationContext;
+
 /**
- * Created by vcareall on 7/1/17.
+ * Created by vcareall on 25/2/17.
  */
 
-public class AlreadySuperLikedMe extends AppCompatActivity {
-    private static final String TAG=AlreadySuperLikedMe.class.getSimpleName();
-    private Context context;
-    private View headerLayout;
-    private Toolbar toolbar;
-    private TextView titleView;
+public class SuperLikedFragment extends Fragment {
+    public View view;
     private RelativeLayout addRelativeLayout;
     private ImageView mSideBar;
     private RecyclerView alreadyLikedRLView;
@@ -51,14 +49,20 @@ public class AlreadySuperLikedMe extends AppCompatActivity {
     DatabaseReference databaseReference;
     public FirebaseUser firebaseUser;
     public  FirebaseAuth firebaseAuth;
-    private AlreadySuperLikeAdapter alreadyLikeAdapter;
+    private SuperLikeAdapter alreadyLikeAdapter;
+    public static SuperLikedFragment newInstance(int page, String title) {
+        SuperLikedFragment fragmentFirst = new SuperLikedFragment();
+        Bundle args = new Bundle();
+        args.putInt("someInt", page);
+        args.putString("someTitle", title);
+        fragmentFirst.setArguments(args);
+        return fragmentFirst;
+    }
 
+    @Nullable
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_already_super_likedme);
-        context=this;
-        setActionBar();
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        view=inflater.inflate(R.layout.content_super_likedme,container,false);
         init();
         firebaseAuth= FirebaseAuth.getInstance();
         if(firebaseAuth.getCurrentUser()!=null){
@@ -67,51 +71,32 @@ public class AlreadySuperLikedMe extends AppCompatActivity {
             Log.d("Android :","firebasseuser.getuid " +firebaseUser.getUid());
             Log.d("Android :","firebasseuser.getEmail: " +firebaseUser.getEmail());
         }
-        if(Utility.isConnectingToInternet(context)){
+        if(Utility.isConnectingToInternet(getActivity())){
             getLikeUserFromFireBase();
         }else{
-            Utility.showMessage(context, Constants.NO_INTERNET_CONNECTION);
+            Utility.showMessage(getActivity(), Constants.NO_INTERNET_CONNECTION);
             alreadyLikedRLView.setVisibility(View.GONE);
             noList.setVisibility(View.VISIBLE);
             noList.setText(Constants.NO_INTERNET_CONNECTION);
         }
-
-
+        return view;
     }
 
-    public void setActionBar(){
-        headerLayout= LayoutInflater.from(context).inflate(R.layout.action_bar,null);
-        toolbar=(Toolbar)findViewById(R.id.toolBar);
-        setSupportActionBar(toolbar);
-        ActionBar actionBar=getSupportActionBar();
-        if(actionBar!=null){
-            actionBar.setDisplayHomeAsUpEnabled(false);
-            actionBar.setCustomView(headerLayout);
-            actionBar.setDisplayShowTitleEnabled(false);
-            actionBar.setDisplayShowCustomEnabled(true);
-            toolbar.setContentInsetsAbsolute(0,0);
-            toolbar.setContentInsetsRelative(0,0);
-        }
-    }
     private void init() {
-        mSideBar=(ImageView)toolbar.findViewById(R.id.side_bar);
-        mSideBar.setVisibility(View.INVISIBLE);
-        titleView=(TextView)toolbar.findViewById(R.id.titleView);
-        titleView.setText(getResources().getText(R.string.superlike));
-        addRelativeLayout=(RelativeLayout)findViewById(R.id.addRelative);
-        addRelativeLayout.addView(MyAdmovAds.loadAdmodAd(context));
-        alreadyLikedRLView=(RecyclerView)findViewById(R.id.already_liked_RLView);
-        noList=(TextView)findViewById(R.id.nolist);
+        addRelativeLayout=(RelativeLayout)view.findViewById(R.id.addRelative);
+        addRelativeLayout.addView(MyAdmovAds.loadAdmodAd(getActivity()));
+        alreadyLikedRLView=(RecyclerView)view.findViewById(R.id.already_liked_RLView);
+        noList=(TextView)view.findViewById(R.id.nolist);
     }
 
     private void getLikeUserFromFireBase() {
-        progressDialog=new ProgressDialog(context);
+        progressDialog=new ProgressDialog(getActivity());
         progressDialog.setMessage(Constants.PLEASE_WAIT);
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.setCancelable(false);
         progressDialog.show();
 
-        databaseReference.child(Constants.SUPER_Like_of_+firebaseUser.getUid()).addValueEventListener(new ValueEventListener() {
+        databaseReference.child(firebaseUser.getUid()).child(Constants.SUPER_Like_of_+firebaseUser.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 progressDialog.dismiss();
@@ -126,10 +111,10 @@ public class AlreadySuperLikedMe extends AppCompatActivity {
                     if(firebaseLikeList.size()>0&&firebaseLikeList!=null){
                         alreadyLikedRLView.setVisibility(View.VISIBLE);
                         noList.setVisibility(View.GONE);
-                        Log.d(TAG,"firebaseLikeList size :" +firebaseLikeList.size());
+                        Log.d("SuperLIkeFragment","firebaseLikeList size :" +firebaseLikeList.size());
                         RecyclerView.LayoutManager layoutManager=new GridLayoutManager(getApplicationContext(),2);
                         alreadyLikedRLView.setLayoutManager(layoutManager);
-                        alreadyLikeAdapter = new AlreadySuperLikeAdapter(AlreadySuperLikedMe.this,context,firebaseLikeList);
+                        alreadyLikeAdapter = new SuperLikeAdapter(SuperLikedFragment.this,getActivity(),firebaseLikeList);
                         alreadyLikedRLView.setAdapter(alreadyLikeAdapter);
 
                     }else{
@@ -152,7 +137,7 @@ public class AlreadySuperLikedMe extends AppCompatActivity {
     }
 
     public void setSuperLikeMe(String userID) {
-        Intent intent=new Intent(AlreadySuperLikedMe.this,AlreadySuperlikeMeProfileActivity.class);
+        Intent intent=new Intent(getActivity(),SuperlikeMeProfileActivity.class);
         intent.putExtra(Constants.PROFILE_ID,userID);
         startActivity(intent);
     }
