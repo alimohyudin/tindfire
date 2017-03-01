@@ -43,10 +43,7 @@ import com.tindfire.util.Constants;
 import com.tindfire.util.Utility;
 import com.viewpagerindicator.CirclePageIndicator;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import retrofit2.Call;
@@ -132,6 +129,12 @@ public class ActivtiyProfile extends AppCompatActivity {
     }
 
     private void addListner() {
+        mSideBar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivtiyProfile.this.finish();
+            }
+        });
 //
 //        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 //            @Override
@@ -434,7 +437,7 @@ public class ActivtiyProfile extends AppCompatActivity {
     }
     private void init() {
         mSideBar=(ImageView)toolbar.findViewById(R.id.side_bar);
-        mSideBar.setVisibility(View.INVISIBLE);
+        mSideBar.setImageResource(R.mipmap.back);
         titleView=(TextView)toolbar.findViewById(R.id.titleView);
         titleView.setText(getResources().getText(R.string.profile));
         viewPager =(ViewPager)findViewById(R.id.ViewPager);
@@ -480,19 +483,19 @@ public class ActivtiyProfile extends AppCompatActivity {
             userstatus.setText(recomondationnBio);
         }
         if(recomondationnPingTime.trim().length()>0){
-            splitePingTime(recomondationnPingTime);
+            Utility.splitePingTime(recomondationnPingTime,userPingtime);
         }
         if(recomondationnBirthDate.trim().length()>0){
-            spliteDateAndTime(recomondationnBirthDate);
+            Utility.spliteDateAndTime(recomondationnBirthDate,userAge);
         }
         try{
             if(recomondationnDisatance!=0){
-                if(mPref.getButtonRadio().equalsIgnoreCase(Constants.DISTANCE_KM)){
+                if(mPref.getButtonRadio().equalsIgnoreCase(Constants.DISTANCE_MILES)){
+                    userDistance.setText(recomondationnDisatance +" " +"miles away");
+                }else{
                     int kilometerDist= (int) (recomondationnDisatance*1.609344);
                     userDistance.setText(kilometerDist +" " +"km away");
                     Log.d("Android :","kilometerDist :" +kilometerDist);
-                }else{
-                    userDistance.setText(recomondationnDisatance +" " +"miles away");
                 }
             }else{
                 userDistance.setText("");
@@ -507,15 +510,25 @@ public class ActivtiyProfile extends AppCompatActivity {
 
     }
 
-    private void splitePingTime(String recomondationnPingTime) {
+   /* private void splitePingTime(String recomondationnPingTime ) {
         try{
-            String spliteTimeWithT[]=recomondationnPingTime.split("T");
-            Log.d("Android :","spliteTimeWithT[1] "+spliteTimeWithT[1]);
-            Log.d("Android :","spliteTimeWithT[0] "+spliteTimeWithT[0]);
-            String splTimeWithDot[]=spliteTimeWithT[1].split("\\.");
-            Log.d("Android :","splTimeWithDot[0] "+splTimeWithDot[0]);
-            totalTime(spliteTimeWithT[0],splTimeWithDot[0]);
 
+            DateFormat utcFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+            utcFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+            Date utcDate = utcFormat.parse(recomondationnPingTime);
+            Log.d("Date And Time------",""+utcDate.toString());
+
+            String dateTimeUTC=utcDate.toString();
+
+            String spliteTimeWithT[]=recomondationnPingTime.split("T");
+//            Log.d("Android :","spliteTimeWithT[1] "+spliteTimeWithT[1]);
+            Log.d("Android :","spliteTimeWithT[0] "+spliteTimeWithT[0]);
+            String splTimeWithDot[]=dateTimeUTC.split(" ");
+            Log.d("Android :","splTimeWithDot[0] "+splTimeWithDot[0]);
+            Log.d("Android :","splTimeWithDot[1] "+splTimeWithDot[1]);
+            Log.d("Android :","splTimeWithDot[2] "+splTimeWithDot[2]);
+            Log.d("Android :","splTimeWithDot[3] "+splTimeWithDot[3]);
+            totalTime(spliteTimeWithT[0],splTimeWithDot[3]);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -551,29 +564,9 @@ public class ActivtiyProfile extends AppCompatActivity {
             userPingtime.setText(" , "+diffMinutes +" " +"minutes ago");
         }
 
-    }
+    }*/
 
-    private void spliteDateAndTime(String recomondationnBirthDate) {
-        try{
-            String getDate[]=recomondationnBirthDate.split("T");
-            Log.d("Android :","getDate[0] "+getDate[0]);
-            if(getDate[0].length()>0){
-                Date getDateFormate= Utility.convertStringDateToDateFormate(getDate[0]);
-                Log.d("Android :","getDateFormate "+getDateFormate);
-                int totalAge=Utility.getAge(getDateFormate);
-                Log.d("Android :","totalAge "+totalAge);
-                if(totalAge!=0){
-                    userAge.setText("," + totalAge);
-                }else{
-                    userAge.setText("");
-                }
-            }
 
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-    }
 
     public class CustomPagerAdapter extends PagerAdapter {
         private final Context context;

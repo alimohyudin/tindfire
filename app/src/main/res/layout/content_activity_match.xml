@@ -7,7 +7,6 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
     <android.support.v7.widget.RecyclerView
         android:id="@+id/match_RLView"
-        android:layout_marginTop="3dp"
         android:layout_width="match_parent"
         android:layout_above="@+id/addRelative"
         android:layout_height="match_parent"/>
@@ -16,7 +15,7 @@
         android:id="@+id/nolist"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="NoList"
+        android:text=""
         android:visibility="gone"
         android:layout_above="@+id/addRelative"
         android:gravity="center"

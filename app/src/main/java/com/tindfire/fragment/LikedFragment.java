@@ -70,14 +70,22 @@ public class LikedFragment extends Fragment {
             Log.d("Android :","firebasseuser.getuid " +firebaseUser.getUid());
             Log.d("Android :","firebasseuser.getEmail: " +firebaseUser.getEmail());
         }
-        if(Utility.isConnectingToInternet(getActivity())){
-            getLikeUserFromFireBase();
-        }else{
-            Utility.showMessage(getActivity(), Constants.NO_INTERNET_CONNECTION);
-            alreadyLikedRLView.setVisibility(View.GONE);
-            noList.setVisibility(View.VISIBLE);
-            noList.setText(Constants.NO_INTERNET_CONNECTION);
+        try{
+            if(Utility.isConnectingToInternet(getActivity())){
+                if(!"".equalsIgnoreCase(firebaseUser.getUid())){
+                    getLikeUserFromFireBase();
+                }
+
+            }else{
+                Utility.showMessage(getActivity(), Constants.NO_INTERNET_CONNECTION);
+                alreadyLikedRLView.setVisibility(View.GONE);
+                noList.setVisibility(View.VISIBLE);
+                noList.setText(Constants.NO_INTERNET_CONNECTION);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
+
         return view;
     }
     private void init() {

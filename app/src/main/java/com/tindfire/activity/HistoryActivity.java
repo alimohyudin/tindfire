@@ -55,7 +55,7 @@ public class HistoryActivity extends AppCompatActivity {
     }
     private void inits(){
         mSideBar=(ImageView)toolbar.findViewById(R.id.side_bar);
-        mSideBar.setVisibility(View.INVISIBLE);
+        mSideBar.setImageResource(R.mipmap.back);
         titleView=(TextView)toolbar.findViewById(R.id.titleView);
         titleView.setText(getResources().getText(R.string.history));
         viewpager=(ViewPager)findViewById(R.id.viewpager);
@@ -67,6 +67,12 @@ public class HistoryActivity extends AppCompatActivity {
         setActiveUpdateTab(0);
     }
     private void addListner(){
+        mSideBar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                HistoryActivity.this.finish();
+            }
+        });
         viewpager.setOffscreenPageLimit(1);
         viewpager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 

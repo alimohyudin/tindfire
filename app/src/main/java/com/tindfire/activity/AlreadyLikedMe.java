@@ -32,6 +32,7 @@ public class AlreadyLikedMe extends AppCompatActivity {
         context=this;
         setActionBar();
         init();
+        addListner();
 
 
 
@@ -53,9 +54,17 @@ public class AlreadyLikedMe extends AppCompatActivity {
     }
     private void init() {
         mSideBar=(ImageView)toolbar.findViewById(R.id.side_bar);
-        mSideBar.setVisibility(View.INVISIBLE);
+        mSideBar.setImageResource(R.mipmap.back);
         titleView=(TextView)toolbar.findViewById(R.id.titleView);
         titleView.setText(getResources().getText(R.string.alreaady_liked_me));
+    }
+    public void addListner(){
+        mSideBar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlreadyLikedMe.this.finish();
+            }
+        });
     }
 
 

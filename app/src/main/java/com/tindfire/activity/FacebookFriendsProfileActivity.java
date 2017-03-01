@@ -35,10 +35,7 @@ import com.tindfire.preference.PreferenceManager;
 import com.tindfire.util.Constants;
 import com.tindfire.util.Utility;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -106,7 +103,7 @@ public class FacebookFriendsProfileActivity extends AppCompatActivity {
     }
     private void init(){
         mSideBar=(ImageView)toolbar.findViewById(R.id.side_bar);
-        mSideBar.setVisibility(View.INVISIBLE);
+        mSideBar.setImageResource(R.mipmap.back);
         titleView=(TextView)toolbar.findViewById(R.id.titleView);
         titleView.setText(getResources().getText(R.string.facebook_friends));
         viewPager=(ViewPager)findViewById(R.id.ViewPager);
@@ -123,6 +120,12 @@ public class FacebookFriendsProfileActivity extends AppCompatActivity {
 
     }
     private void addListner(){
+        mSideBar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FacebookFriendsProfileActivity.this.finish();
+            }
+        });
         viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -270,19 +273,19 @@ public class FacebookFriendsProfileActivity extends AppCompatActivity {
                             FacebookFriendsProfileResults facebookFriendsProfileResults= response.body().getResults();
                             userProfileName.setText(facebookFriendsProfileResults.getName()+"");
                             if(facebookFriendsProfileResults.getPingTime().trim().length()>0){
-                                splitePingTime(facebookFriendsProfileResults.getPingTime());
+                                Utility.splitePingTime(facebookFriendsProfileResults.getPingTime(),pingtime);
                             }
                             if(facebookFriendsProfileResults.getBirthDate().trim().length()>0){
-                                spliteDateAndTime(facebookFriendsProfileResults.getBirthDate());
+                                Utility.spliteDateAndTime(facebookFriendsProfileResults.getBirthDate(),userAge);
                             }
                             try{
                                 if(facebookFriendsProfileResults.getDistanceMi()!=0){
-                                    if(mPref.getButtonRadio().equalsIgnoreCase(Constants.DISTANCE_KM)){
+                                    if(mPref.getButtonRadio().equalsIgnoreCase(Constants.DISTANCE_MILES)){
+                                        distance.setText(facebookFriendsProfileResults.getDistanceMi() +" " +"miles away");
+                                    }else{
                                         int kilometerDist= (int) (facebookFriendsProfileResults.getDistanceMi()*1.609344);
                                         distance.setText(kilometerDist +" " +"km away");
                                         Log.d("Android :","kilometerDist :" +kilometerDist);
-                                    }else{
-                                        distance.setText(facebookFriendsProfileResults.getDistanceMi() +" " +"miles away");
                                     }
                                 }else{
                                     distance.setText("");
@@ -402,7 +405,7 @@ public class FacebookFriendsProfileActivity extends AppCompatActivity {
         }
     }
 
-    private void splitePingTime(String recomondationnPingTime) {
+   /* private void splitePingTime(String recomondationnPingTime) {
         try{
             String spliteTimeWithT[]=recomondationnPingTime.split("T");
             Log.d("Android :","spliteTimeWithT[1] "+spliteTimeWithT[1]);
@@ -410,6 +413,12 @@ public class FacebookFriendsProfileActivity extends AppCompatActivity {
             String splTimeWithDot[]=spliteTimeWithT[1].split("\\.");
             Log.d("Android :","splTimeWithDot[0] "+splTimeWithDot[0]);
             totalTime(spliteTimeWithT[0],splTimeWithDot[0]);
+
+//            DateFormat utcFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+//            utcFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+//            Date utcDate = utcFormat.parse(recomondationnPingTime);
+//            Log.d("Date And Time------",""+utcDate.toString());
+
 
         }catch (Exception e){
             e.printStackTrace();
@@ -466,7 +475,7 @@ public class FacebookFriendsProfileActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-    }
+    }*/
     private void hitLikeAPi() {
         progressDialog=new ProgressDialog(context);
         progressDialog.setMessage(Constants.PLEASE_WAIT);

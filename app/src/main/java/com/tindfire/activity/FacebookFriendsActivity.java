@@ -58,6 +58,7 @@ public class FacebookFriendsActivity extends AppCompatActivity {
         mPref= com.tindfire.preference.PreferenceManager.getInstatnce(context);
         setActionBar();
         init();
+        addListner();
         if(Utility.isConnectingToInternet(context)){
             getFacebookFriendsOfTinder();
         }else{
@@ -66,6 +67,14 @@ public class FacebookFriendsActivity extends AppCompatActivity {
             nolist.setText(Constants.NO_INTERNET_CONNECTION);
         }
 
+    }
+    public void addListner(){
+        mSideBar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FacebookFriendsActivity.this.finish();
+            }
+        });
     }
     public void setActionBar(){
         headerLayout= LayoutInflater.from(context).inflate(R.layout.action_bar,null);
@@ -83,7 +92,7 @@ public class FacebookFriendsActivity extends AppCompatActivity {
     }
     private void init() {
         mSideBar=(ImageView)toolbar.findViewById(R.id.side_bar);
-        mSideBar.setVisibility(View.INVISIBLE);
+        mSideBar.setImageResource(R.mipmap.back);
         titleView=(TextView)toolbar.findViewById(R.id.titleView);
         titleView.setText(getResources().getText(R.string.facebook_friends));
         addRelativeLayout=(RelativeLayout)findViewById(R.id.addRelative);

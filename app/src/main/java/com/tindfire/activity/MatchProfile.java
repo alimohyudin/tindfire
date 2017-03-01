@@ -26,10 +26,7 @@ import com.tindfire.util.Constants;
 import com.tindfire.util.Utility;
 import com.viewpagerindicator.CirclePageIndicator;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -81,6 +78,12 @@ public class MatchProfile extends AppCompatActivity {
     }
 
     private void addListner() {
+        mSideBar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MatchProfile.this.finish();
+            }
+        });
         indicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
             @Override
@@ -125,7 +128,7 @@ public class MatchProfile extends AppCompatActivity {
     }
     private void init() {
         mSideBar=(ImageView)toolbar.findViewById(R.id.side_bar);
-        mSideBar.setVisibility(View.INVISIBLE);
+        mSideBar.setImageResource(R.mipmap.back);
         titleView=(TextView)toolbar.findViewById(R.id.titleView);
         titleView.setText(getResources().getText(R.string.match));
         addRelativeLayout=(RelativeLayout)findViewById(R.id.addRelative);
@@ -166,82 +169,13 @@ public class MatchProfile extends AppCompatActivity {
             userstatus.setText(recomondationnBio);
         }
         if(recomondationnPingTime.trim().length()>0){
-            splitePingTime(recomondationnPingTime);
+            Utility.splitePingTime(recomondationnPingTime,userPingtime);
         }
         if(recomondationnBirthDate.trim().length()>0){
-            spliteDateAndTime(recomondationnBirthDate);
+            Utility.spliteDateAndTime(recomondationnBirthDate,userAge);
         }
 
     }
-
-    private void splitePingTime(String recomondationnPingTime) {
-        try{
-            String spliteTimeWithT[]=recomondationnPingTime.split("T");
-            Log.d("Android :","spliteTimeWithT[1] "+spliteTimeWithT[1]);
-            Log.d("Android :","spliteTimeWithT[0] "+spliteTimeWithT[0]);
-            String splTimeWithDot[]=spliteTimeWithT[1].split("\\.");
-            Log.d("Android :","splTimeWithDot[0] "+splTimeWithDot[0]);
-            totalTime(spliteTimeWithT[0],splTimeWithDot[0]);
-
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-
-    private void totalTime(String datestring, String timeSTring) {
-        String dateStart = datestring+" "+timeSTring;
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date dateEnd = new Date();
-        System.out.println(dateFormat.format(dateEnd));
-        SimpleDateFormat format = new SimpleDateFormat("yy-MM-dd HH:mm:ss");
-        Date d1 = null;
-        try {
-            d1 = format.parse(dateStart);
-
-        } catch (Exception  e) {
-            e.printStackTrace();
-        }
-        long diff = dateEnd.getTime() - d1.getTime();
-        long diffSeconds = diff / 1000 % 60;
-        long diffMinutes = diff / (60 * 1000) % 60;
-        long diffHours = diff / (60 * 60 * 1000);
-        int diffInDays = (int) ((dateEnd.getTime() - d1.getTime()) / (1000 * 60 * 60 * 24));
-
-        if (diffInDays > 1) {
-            System.err.println("Difference in number of days (2) : " + diffInDays);
-            userPingtime.setText(" "+diffInDays + " " +"days ago");
-        } else if (diffHours > 24) {
-            System.err.println(">24" +diffHours);
-            userPingtime.setText(" "+diffHours +" " +"hours ago");
-        } else if (diffMinutes >= 1) {
-            System.err.println("minutes" +diffMinutes);
-            userPingtime.setText(" "+diffMinutes +" " +"minutes ago");
-        }
-
-    }
-
-    private void spliteDateAndTime(String recomondationnBirthDate) {
-        try{
-            String getDate[]=recomondationnBirthDate.split("T");
-            Log.d("Android :","getDate[0] "+getDate[0]);
-            if(getDate[0].length()>0){
-                Date getDateFormate= Utility.convertStringDateToDateFormate(getDate[0]);
-                Log.d("Android :","getDateFormate "+getDateFormate);
-                int totalAge=Utility.getAge(getDateFormate);
-                Log.d("Android :","totalAge "+totalAge);
-                if(totalAge!=0){
-                    userAge.setText("," + totalAge);
-                }else{
-                    userAge.setText("");
-                }
-            }
-
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-    }
-
     public class CustomPagerAdapter extends PagerAdapter {
         private final Context context;
         private String imagebuzz;

@@ -29,10 +29,7 @@ import com.tindfire.preference.PreferenceManager;
 import com.tindfire.util.Constants;
 import com.tindfire.util.Utility;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -99,7 +96,7 @@ public class LikedMeProfileActivity extends AppCompatActivity {
     }
     private void init(){
         mSideBar=(ImageView)toolbar.findViewById(R.id.side_bar);
-        mSideBar.setVisibility(View.INVISIBLE);
+        mSideBar.setImageResource(R.mipmap.back);
         titleView=(TextView)toolbar.findViewById(R.id.titleView);
         titleView.setText(getResources().getText(R.string.liked));
         viewPager=(ViewPager)findViewById(R.id.ViewPager);
@@ -115,6 +112,12 @@ public class LikedMeProfileActivity extends AppCompatActivity {
 
     }
     private void addListner(){
+        mSideBar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LikedMeProfileActivity.this.finish();
+            }
+        });
         viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -157,19 +160,20 @@ public class LikedMeProfileActivity extends AppCompatActivity {
                             FacebookFriendsProfileResults facebookFriendsProfileResults= response.body().getResults();
                             userProfileName.setText(facebookFriendsProfileResults.getName()+"");
                             if(facebookFriendsProfileResults.getPingTime().trim().length()>0){
-                                splitePingTime(facebookFriendsProfileResults.getPingTime());
+                                Utility.splitePingTime(facebookFriendsProfileResults.getPingTime(),pingtime);
                             }
                             if(facebookFriendsProfileResults.getBirthDate().trim().length()>0){
-                                spliteDateAndTime(facebookFriendsProfileResults.getBirthDate());
+                                Utility.spliteDateAndTime(facebookFriendsProfileResults.getBirthDate(),userAge);
                             }
                             try{
                                 if(facebookFriendsProfileResults.getDistanceMi()!=0){
-                                    if(mPref.getButtonRadio().equalsIgnoreCase(Constants.DISTANCE_KM)){
+                                    if(mPref.getButtonRadio().equalsIgnoreCase(Constants.DISTANCE_MILES)){
+                                        distance.setText(facebookFriendsProfileResults.getDistanceMi() +" " +"miles away");
+
+                                    }else{
                                         int kilometerDist= (int) (facebookFriendsProfileResults.getDistanceMi()*1.609344);
                                         distance.setText(kilometerDist +" " +"km away");
                                         Log.d("Android :","kilometerDist :" +kilometerDist);
-                                    }else{
-                                        distance.setText(facebookFriendsProfileResults.getDistanceMi() +" " +"miles away");
                                     }
                                 }else{
                                     distance.setText("");
@@ -276,72 +280,6 @@ public class LikedMeProfileActivity extends AppCompatActivity {
         public void destroyItem(ViewGroup container, int position, Object object) {
             ((ViewPager) container).removeView((ImageView) object);
         }
-    }
-
-    private void splitePingTime(String recomondationnPingTime) {
-        try{
-            String spliteTimeWithT[]=recomondationnPingTime.split("T");
-            Log.d("Android :","spliteTimeWithT[1] "+spliteTimeWithT[1]);
-            Log.d("Android :","spliteTimeWithT[0] "+spliteTimeWithT[0]);
-            String splTimeWithDot[]=spliteTimeWithT[1].split("\\.");
-            Log.d("Android :","splTimeWithDot[0] "+splTimeWithDot[0]);
-            totalTime(spliteTimeWithT[0],splTimeWithDot[0]);
-
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-    private void totalTime(String datestring, String timeSTring) {
-        String dateStart = datestring+" "+timeSTring;
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date dateEnd = new Date();
-        System.out.println(dateFormat.format(dateEnd));
-        SimpleDateFormat format = new SimpleDateFormat("yy-MM-dd HH:mm:ss");
-        Date d1 = null;
-        try {
-            d1 = format.parse(dateStart);
-
-        } catch (Exception  e) {
-            e.printStackTrace();
-        }
-        long diff = dateEnd.getTime() - d1.getTime();
-        long diffSeconds = diff / 1000 % 60;
-        long diffMinutes = diff / (60 * 1000) % 60;
-        long diffHours = diff / (60 * 60 * 1000);
-        int diffInDays = (int) ((dateEnd.getTime() - d1.getTime()) / (1000 * 60 * 60 * 24));
-
-        if (diffInDays > 1) {
-            System.err.println("Difference in number of days (2) : " + diffInDays);
-            pingtime.setText(" , "+diffInDays + " " +"days ago");
-        } else if (diffHours > 24) {
-            System.err.println(">24" +diffHours);
-            pingtime.setText(" , "+diffHours +" " +"hours ago");
-        } else if (diffMinutes >= 1) {
-            System.err.println("minutes" +diffMinutes);
-            pingtime.setText(" , "+diffMinutes +" " +"minutes ago");
-        }
-
-    }
-    private void spliteDateAndTime(String recomondationnBirthDate) {
-        try{
-            String getDate[]=recomondationnBirthDate.split("T");
-            Log.d("Android :","getDate[0] "+getDate[0]);
-            if(getDate[0].length()>0){
-                Date getDateFormate= Utility.convertStringDateToDateFormate(getDate[0]);
-                Log.d("Android :","getDateFormate "+getDateFormate);
-                int totalAge=Utility.getAge(getDateFormate);
-                Log.d("Android :","totalAge "+totalAge);
-                if(totalAge!=0){
-                    userAge.setText("," + totalAge);
-                }else{
-                    userAge.setText("");
-                }
-            }
-
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
     }
 
     @Override

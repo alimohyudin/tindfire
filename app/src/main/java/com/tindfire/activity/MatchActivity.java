@@ -145,12 +145,17 @@ public class MatchActivity extends AppCompatActivity {
     }
 
     private void clickListner() {
-
+        mSideBar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MatchActivity.this.finish();
+            }
+        });
     }
 
     private void init() {
         mSideBar=(ImageView)toolbar.findViewById(R.id.side_bar);
-        mSideBar.setVisibility(View.INVISIBLE);
+        mSideBar.setImageResource(R.mipmap.back);
         titleView=(TextView)toolbar.findViewById(R.id.titleView);
         titleView.setText(getResources().getText(R.string.match));
         matchRLView=(RecyclerView)findViewById(R.id.match_RLView);

@@ -141,12 +141,12 @@ public class ActivityMain extends AppCompatActivity {
             mNolist.setText(Constants.NO_INTERNET_CONNECTION);
         }
         mRefreshLayout.setOnRefreshListener(mRefreshEventDetector);
-
         try {
             MyAdmovAds.loadintertitisalAdmodAd(context);
         } catch (Exception e) {
             e.printStackTrace();
         }
+
 
     }
 

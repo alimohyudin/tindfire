@@ -59,7 +59,7 @@ public class ActivtiySetting extends AppCompatActivity {
     }
     private void init() {
         mSideBar=(ImageView)toolbar.findViewById(R.id.side_bar);
-        mSideBar.setVisibility(View.INVISIBLE);
+        mSideBar.setImageResource(R.mipmap.back);
         titleView=(TextView)toolbar.findViewById(R.id.titleView);
         titleView.setText(getResources().getText(R.string.setting));
         distanceInKm=(RadioButton)findViewById(R.id.distanceInKm);
@@ -115,6 +115,12 @@ public class ActivtiySetting extends AppCompatActivity {
                 womenRadioButton.setChecked(true);
                 menRadioButton.setChecked(false);
                 mPref.setButtonRadioFacebook(Constants.WOMEN);
+            }
+        });
+        mSideBar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivtiySetting.this.finish();
             }
         });
 

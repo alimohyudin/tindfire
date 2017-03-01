@@ -7,8 +7,8 @@ public class Constants {
     public static final String NO_INTERNET_CONNECTION="No Internet Conncetion Please Try Again...";
     public static final String FACEBOOK_LOGOUT="Logout Please Login again...";
     public static final String PLEASE_WAIT="Please wait...";
-    public static final String NO_LIST_AVAILABLE="No List Available";
-    public static final String NO_MATCH_AVAILABLE="No Match Available";
+    public static final String NO_LIST_AVAILABLE="No More People Around You";
+    public static final String NO_MATCH_AVAILABLE="No More People Around You";
     public static final int STATUS_200=200;
     public static final int STATUS_401=401;
     public static final String RECOM_PHO_LIST="recomondationnPhotoList";
